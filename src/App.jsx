@@ -4,6 +4,7 @@ import StartPage from './pages/StartPage';
 import LoginPage from './pages/LoginPage';
 
 import KakaoRedirectPage from './pages/KakaoRedirectPage';
+import MainPage from './pages/MainPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<StartPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/oauth" element={<KakaoRedirectPage />} />
+        <Route path="/main" element={<MainPage />} />
       </Routes>
     </Router>
   );
