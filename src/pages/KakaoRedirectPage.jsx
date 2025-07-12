@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../utils/api'; // api 인스턴스 임포트
 
 const KakaoRedirectPage = () => {
   const location = useLocation();
@@ -14,19 +15,9 @@ const KakaoRedirectPage = () => {
 
       const sendCodeToBackend = async () => {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/kakao`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ code: code }),
-          });
+          const response = await api.post('/api/auth/kakao', { code: code });
 
-          if (!response.ok) {
-            throw new Error('백엔드 로그인 처리 실패');
-          }
-
-          const data = await response.json();
+          const data = response.data;
           console.log('백엔드 응답:', data);
 
           localStorage.setItem('quizly_token', data.token);
