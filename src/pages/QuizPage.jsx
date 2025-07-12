@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
 import Navbar from '../components/Navbar';
 
 const QuizPage = () => {
+    const navigate = useNavigate(); // useNavigate 훅 사용
     const [selectedMajor, setSelectedMajor] = useState('');
     const [selectedSubject, setSelectedSubject] = useState('');
     const [selectedChapter, setSelectedChapter] = useState('');
@@ -35,16 +36,23 @@ const QuizPage = () => {
         setSelectedQuizType(type);
     };
 
+    const handleStartQuiz = () => {
+        // 선택된 값들을 쿼리 파라미터로 넘겨주거나, 상태 관리 라이브러리를 통해 전달할 수 있습니다.
+        navigate(`/quiz-taking?major=${selectedMajor}&subject=${selectedSubject}&chapter=${selectedChapter}&type=${selectedQuizType}`);
+    };
+
     return (
         <div className="min-h-screen bg-white-100">
             <Navbar />
             <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] p-4">
-                <h1 className="w-full text-left pl-4 ml-10 text-4xl text-[#0C21C1] font-bold">퀴즈 풀기</h1>
-                <p className="w-full text-left p-4 mb-2 ml-10">원하는 전공, 과목, 문제 유형을 선택하세요</p>
+                <div className="w-full max-w-md text-center mb-12">
+                    <h1 className="text-4xl text-[#0C21C1] font-bold mb-4">퀴즈 풀기</h1>
+                    <p className="text-gray-600 text-lg">원하는 전공, 과목, 문제 유형을 선택하세요.</p>
+                </div>
 
                 <div className="">
                     {/* 드롭다운 메뉴들 */}
-                    <div className="w-xs max-w-md space-y-4 mb-8">
+                    <div className="w-full max-w-md space-y-4 mb-8">
                         <div className="flex flex-col">
                             <label htmlFor="major-select" className="w-xs text-left text-2xl ml-1 mb-2 font-bold text-gray-700">
                                 전공
@@ -130,11 +138,13 @@ const QuizPage = () => {
                 </div>
 
 
-                <Link to="/login">
-                    <button className="w-[430px] h-[53px] bg-[#0C21C1] text-white font-semibold text-[17px] rounded-[32px] shadow-[0_4px_26px_rgba(0,0,0,0.3)] transition-all duration-300 hover:bg-[#0A1DA8] hover:shadow-[0_6px_30px_rgba(0,0,0,0.3)] mt-[40px]">
-                        퀴즈 시작하기
-                    </button>
-                </Link>
+                <button
+                    className="w-[430px] h-[53px] bg-[#0C21C1] text-white font-semibold text-[17px] rounded-[32px] shadow-[0_4px_26px_rgba(0,0,0,0.3)] transition-all duration-300 hover:bg-[#0A1DA8] hover:shadow-[0_6px_30px_rgba(0,0,0,0.3)] mt-[40px]"
+                    onClick={handleStartQuiz}
+                    disabled={!selectedMajor || !selectedSubject || !selectedChapter || !selectedQuizType}
+                >
+                    퀴즈 시작하기
+                </button>
             </div>
         </div>
     );
