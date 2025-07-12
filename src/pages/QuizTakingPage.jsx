@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // useNavigate 임포트
+import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import logoImage from '../assets/logo_1.png'; // logo.png 임포트
 
 const dummyQuizzes = [
   {
@@ -45,6 +46,7 @@ const QuizTakingPage = () => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
   const [answered, setAnswered] = useState(false); // 문제 답변 여부 상태 추가
+  const [userSelectedOption, setUserSelectedOption] = useState(null); // 사용자가 선택한 객관식 옵션
 
   const queryParams = new URLSearchParams(location.search);
   const major = queryParams.get('major');
@@ -68,6 +70,8 @@ const QuizTakingPage = () => {
   const handleAnswerSubmit = (answer) => {
     if (answered) return; // 이미 답변했으면 중복 제출 방지
 
+    setUserSelectedOption(answer); // 사용자가 선택한 옵션 저장
+
     let isCorrect;
     if (currentQuiz.type === 'SUBJECTIVE') {
       isCorrect = answer.toLowerCase() === currentQuiz.answer.toLowerCase();
@@ -87,6 +91,7 @@ const QuizTakingPage = () => {
   const handleNextQuestion = () => {
     setUserAnswer(''); // 사용자 입력 초기화
     setAnswered(false); // 답변 상태 초기화
+    setUserSelectedOption(null); // 선택 옵션 초기화
     setCurrentQuizIndex((prevIndex) => prevIndex + 1);
   };
 
@@ -96,22 +101,30 @@ const QuizTakingPage = () => {
     switch (currentQuiz.type) {
       case 'OX':
         return (
-          <div className="flex space-x-4">
+          <div className="flex justify-center space-x-8">
             <button
-              className="p-3 rounded-md font-semibold bg-[#0C21C1] text-white hover:bg-[#0A1DA8] disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`w-24 h-24 rounded-full font-bold text-2xl transition-all duration-200 border-4 ${userAnswer === 'O'
+                ? 'bg-[#0C21C1] text-white border-[#0C21C1] shadow-lg'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-[#0C21C1] hover:text-[#0C21C1]'
+                }`}
               onClick={() => handleAnswerSubmit('O')}
               disabled={answered}
             >
               O
             </button>
             <button
-              className="p-3 rounded-md font-semibold bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`w-24 h-24 rounded-full font-bold text-2xl transition-all duration-200 border-4 ${userAnswer === 'X'
+                ? 'bg-red-500 text-white border-red-500 shadow-lg'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500'
+                }`}
               onClick={() => handleAnswerSubmit('X')}
               disabled={answered}
             >
               X
             </button>
           </div>
+
+
         );
       case 'MULTIPLE_CHOICE':
         return (
@@ -119,7 +132,16 @@ const QuizTakingPage = () => {
             {currentQuiz.options.map((option, index) => (
               <button
                 key={index}
-                className="p-3 rounded-md font-semibold bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`p-3 rounded-md font-semibold transition-colors duration-200 border-2 ${answered && option === currentQuiz.answer
+                  ? 'bg-green-500 text-white border-green-500' // 정답일 경우
+                  : answered && option === userSelectedOption && option !== currentQuiz.answer
+                    ? 'bg-red-500 text-white border-red-500' // 오답일 경우
+                    : answered
+                      ? 'bg-gray-200 text-gray-700 border-gray-300 opacity-50 cursor-not-allowed' // 답변 후 다른 선택지
+                      : option === userSelectedOption
+                        ? 'bg-[#0C21C1] text-white border-[#0C21C1]' // 선택된 옵션
+                        : 'bg-white text-gray-700 border-gray-300 hover:border-[#0C21C1] hover:text-[#0C21C1]' // 기본 상태
+                  }`}
                 onClick={() => handleAnswerSubmit(option)}
                 disabled={answered}
               >
@@ -160,11 +182,11 @@ const QuizTakingPage = () => {
 
   if (!currentQuiz) {
     return (
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-white">
         <Navbar />
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] p-4">
-          <h1 className="text-3xl font-bold mb-8">퀴즈 종료</h1>
-          <p className="text-lg mb-8">모든 퀴즈를 푸셨습니다!</p>
+          <h1 className="text-3xl font-bold mb-4">퀴즈 종료</h1>
+          <p className="text-lg mb-16">모든 퀴즈를 푸셨습니다!</p>
           <div className="flex space-x-4">
             <button
               className="p-3 rounded-md font-semibold bg-[#0C21C1] text-white hover:bg-[#0A1DA8]"
@@ -196,8 +218,13 @@ const QuizTakingPage = () => {
           {renderQuizInput()}
 
           {showFeedback && (
-            <div className={`absolute inset-0 flex flex-col items-center justify-center text-white text-3xl font-bold ${feedback === '정답입니다!' ? 'bg-green-500 bg-opacity-90' : 'bg-red-500 bg-opacity-90'}`}>
-              {feedback}
+            <div className={`absolute inset-0 flex flex-col items-center justify-center text-black text-3xl font-bold ${feedback === '정답입니다!' ? 'bg-opacity-90' : 'bg-opacity-90'}`}>
+              <img
+                src={logoImage}
+                alt="Quizly Logo"
+                className={`w-32 h-40 ${feedback === '정답입니다!' ? 'animate-quiz-popup-fade-out animate-quiz-bounce' : 'animate-quiz-popup-fade-out'}`}
+              />
+              <p className="mt-4">{feedback}</p>
             </div>
           )}
 
