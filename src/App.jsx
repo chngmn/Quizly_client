@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import KakaoRedirectPage from './pages/KakaoRedirectPage';
 import MainPage from './pages/MainPage';
 import QuizPage from './pages/QuizPage';
+import QuizTakingPage from './pages/QuizTakingPage';
 import QuizUploadPage from './pages/QuizUploadPage';
 import WrongAnsPage from './pages/WrongAnsPage';
 import MyQuizzesPage from './pages/MyQuizzesPage';
@@ -24,6 +25,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/main" element={<MainPage />} />
           <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/quiz-taking" element={<QuizTakingPage />} />
           <Route path="/quiz-upload" element={<QuizUploadPage />} />
           <Route path="/wrong-answers" element={<WrongAnsPage />} />
           <Route path="/my-quizzes" element={<MyQuizzesPage />} />

@@ -30,6 +30,8 @@ const KakaoRedirectPage = () => {
           console.log('백엔드 응답:', data);
 
           localStorage.setItem('quizly_token', data.token);
+          localStorage.setItem('user_nickname', data.user.nickname); // 닉네임 저장
+          localStorage.setItem('user_profile_image', data.user.profileImage); // 프로필 이미지 URL 저장
 
           navigate('/main');
 
