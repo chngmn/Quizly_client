@@ -14,7 +14,6 @@ import SubjectiveQuizCreatePage from './pages/SubjectiveQuizCreatePage';
 import ExamArchiveCreatePage from './pages/ExamArchiveCreatePage';
 import WrongAnsPage from './pages/WrongAnsPage';
 import MyQuizzesPage from './pages/MyQuizzesPage';
-import NoticePage from './pages/NoticePage';
 import MyinfoPage from './pages/MyinfoPage';
 import ProtectedRoute from './components/ProtectedRoute'; // ProtectedRoute 임포트
 
@@ -39,7 +38,6 @@ function App() {
           <Route path="/quiz-create/exam-archive" element={<ExamArchiveCreatePage />} />
           <Route path="/wrong-answers" element={<WrongAnsPage />} />
           <Route path="/my-quizzes" element={<MyQuizzesPage />} />
-          <Route path="/notice" element={<NoticePage />} />
           <Route path="/my-info" element={<MyinfoPage />} />
         </Route>
       </Routes>
