@@ -7,6 +7,10 @@ import KakaoRedirectPage from './pages/KakaoRedirectPage';
 import MainPage from './pages/MainPage';
 import QuizPage from './pages/QuizPage';
 import QuizUploadPage from './pages/QuizUploadPage';
+import OXQuizCreatePage from './pages/OXQuizCreatePage';
+import MultipleChoiceQuizCreatePage from './pages/MultipleChoiceQuizCreatePage';
+import SubjectiveQuizCreatePage from './pages/SubjectiveQuizCreatePage';
+import ExamArchiveCreatePage from './pages/ExamArchiveCreatePage';
 import WrongAnsPage from './pages/WrongAnsPage';
 import MyQuizzesPage from './pages/MyQuizzesPage';
 import NoticePage from './pages/NoticePage';
@@ -27,6 +31,10 @@ function App() {
           <Route path="/main" element={<MainPage />} />
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/quiz-upload" element={<QuizUploadPage />} />
+          <Route path="/quiz-create/ox" element={<OXQuizCreatePage />} />
+          <Route path="/quiz-create/multiple-choice" element={<MultipleChoiceQuizCreatePage />} />
+          <Route path="/quiz-create/subjective" element={<SubjectiveQuizCreatePage />} />
+          <Route path="/quiz-create/exam-archive" element={<ExamArchiveCreatePage />} />
           <Route path="/wrong-answers" element={<WrongAnsPage />} />
           <Route path="/my-quizzes" element={<MyQuizzesPage />} />
           <Route path="/notice" element={<NoticePage />} />
