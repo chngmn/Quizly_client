@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
+import Logo from './Logo';
 
 const Navbar = () => {
   const [userNickname, setUserNickname] = useState(null);
@@ -20,8 +20,7 @@ const Navbar = () => {
     <nav className="bg-white shadow-md p-4 flex items-center justify-between">
       {/* 로고 */}
       <Link to="/main" className="flex items-center space-x-2">
-        <img src={logoImage} alt="Quizly Logo" className="h-8 w-auto" />
-        <span className="text-2xl font-bold text-[#0C21C1]">Quizly</span>
+        <Logo className="ml-2" size="defalut" />
       </Link>
 
       {/* 중앙 정렬 메뉴 그룹 */}
@@ -41,9 +40,9 @@ const Navbar = () => {
       </div>
 
       {/* 가장 오른쪽: 내정보확인 또는 닉네임/프로필 사진 버튼 */}
-      <Link to="/my-info" className="flex-shrink-0 flex items-center space-x-2 text-gray-700 hover:text-[#0C21C1] font-medium">
+      <Link to="/my-info" className="flex-shrink-0 flex items-center space-x-2 text-gray-700 hover:text-[#0C21C1] font-medium mr-2">
         {userProfileImage && (
-          <img src={userProfileImage} alt="프로필" className="w-8 h-8 rounded-full" />
+          <img src={userProfileImage} alt="프로필" className="w-8 h-8 rounded-full mr-2" />
         )}
         {userNickname ? `${userNickname}님` : '내정보확인'}
       </Link>
