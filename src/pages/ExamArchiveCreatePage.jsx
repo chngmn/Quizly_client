@@ -92,7 +92,7 @@ const ExamArchiveCreatePage = () => {
                             <input
                                 type="text"
                                 className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0C21C1] focus:border-[#0C21C1] text-gray-700"
-                                placeholder="족보 제목을 입력하세요..."
+                                placeholder="족보 제목을 입력하세요"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
@@ -158,7 +158,7 @@ const ExamArchiveCreatePage = () => {
                             <textarea
                                 className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0C21C1] focus:border-[#0C21C1] text-gray-700 resize-none"
                                 rows="4"
-                                placeholder="족보에 대한 추가 설명을 입력하세요..."
+                                placeholder="족보에 대한 추가 설명을 입력하세요"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                             />
