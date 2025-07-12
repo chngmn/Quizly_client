@@ -92,6 +92,7 @@ const QuizTakingPage = () => {
     setUserAnswer(''); // 사용자 입력 초기화
     setAnswered(false); // 답변 상태 초기화
     setUserSelectedOption(null); // 선택 옵션 초기화
+    setShowFeedback(false); // 피드백 즉시 숨기기
     setCurrentQuizIndex((prevIndex) => prevIndex + 1);
   };
 
