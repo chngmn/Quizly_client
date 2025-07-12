@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import StartPage from './pages/StartPage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import KakaoRedirectPage from './pages/KakaoRedirectPage';
 import MainPage from './pages/MainPage';
 import QuizPage from './pages/QuizPage';
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<StartPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/oauth" element={<KakaoRedirectPage />} />
+        <Route path="/signup" element={<SignupPage />} />
 
         {/* 로그인 보호가 필요한 라우트들 */}
         <Route element={<ProtectedRoute />}>
