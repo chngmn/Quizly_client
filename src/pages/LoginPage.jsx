@@ -15,14 +15,14 @@ const LoginPage = () => {
     // JavaScript 키를 사용하여 카카오 SDK 초기화
     // 여기에 실제 발급받은 JavaScript 키를 입력하세요.
     if (!kakao.isInitialized()) {
-      kakao.init('9805c31b5de3334a5a707c4095a955ea');
+      kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
     }
   }, []);
 
   const handleKakaoLogin = () => {
     const kakao = window.Kakao;
     kakao.Auth.authorize({
-      redirectUri: 'http://localhost:5173/oauth',
+      redirectUri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
     });
   };
 

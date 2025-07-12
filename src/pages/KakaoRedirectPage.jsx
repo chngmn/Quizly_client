@@ -14,7 +14,7 @@ const KakaoRedirectPage = () => {
 
       const sendCodeToBackend = async () => {
         try {
-          const response = await fetch('http://localhost:8000/api/auth/kakao', {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/kakao`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
