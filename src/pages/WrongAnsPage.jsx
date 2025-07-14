@@ -20,12 +20,11 @@ const WrongAnsPage = () => {
     const itemsPerPage = 5;
 
     const quizTypeMap = {
-        'O/X': 'ox',
-        '객관식': 'multiple',
-        '주관식': 'subjective',
-        '족보': 'exam_archive',
+        'OX': 'ox',
+        'MULTIPLE_CHOICE': 'multiple',
+        'SUBJECTIVE': 'subjective',
+        'EXAM_ARCHIVE': 'exam_archive',
     };
-
     // 전공 목록 불러오기
     useEffect(() => {
         const fetchMajors = async () => {
@@ -70,9 +69,9 @@ const WrongAnsPage = () => {
                 const totalQuizzesResponse = await api.get('/api/records/total-quizzes-taken');
                 const totalQuestions = totalQuizzesResponse.data.totalQuizzesTaken;
                 const totalWrongCount = wrongAnswersResponse.data.length;
-                
+
                 const wrongRate = totalQuestions > 0 ? Math.round((totalWrongCount / totalQuestions) * 100) : 0;
-                
+
                 setTotalStats({ totalQuestions, wrongRate });
 
                 setLoading(false);
@@ -149,7 +148,7 @@ const WrongAnsPage = () => {
             state: {
                 majorId: quizItem.quiz.major?._id,
                 subjectId: quizItem.quiz.subject?._id,
-                quizType: quizItem.quiz.type, // 서버 유형을 그대로 전달
+                quizType: Object.keys(quizTypeMap).find(key => quizTypeMap[key] === quizItem.quiz.type), // 서버 유형을 클라이언트 유형으로 변환
                 quizCount: 1, // 한 문제만 다시 풀기
                 initialQuizId: quizItem.quiz._id // 특정 퀴즈부터 시작하도록 (선택 사항)
             }
@@ -303,8 +302,8 @@ const WrongAnsPage = () => {
                                 key={pageNum}
                                 onClick={() => setCurrentPage(pageNum)}
                                 className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${currentPage === pageNum
-                                        ? 'bg-[#0C21C1] text-white'
-                                        : 'text-gray-700 hover:bg-gray-100'
+                                    ? 'bg-[#0C21C1] text-white'
+                                    : 'text-gray-700 hover:bg-gray-100'
                                     }`}
                             >
                                 {pageNum}
