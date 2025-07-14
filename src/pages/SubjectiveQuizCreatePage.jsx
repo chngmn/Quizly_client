@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
 
 const SubjectiveQuizCreatePage = () => {
     const navigate = useNavigate();
-    const [subject, setSubject] = useState('');
+    const location = useLocation();
+    const { majorId, subjectId } = location.state || {};
+
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
 
     const handleSubmit = async () => {
-        if (!subject || !question || !answer) {
-            alert('과목, 문제, 정답을 모두 입력해주세요.');
+        if (!question || !answer) {
+            alert('문제와 정답을 모두 입력해주세요.');
             return;
         }
 
         try {
             const quizData = {
-                title: `${subject} - 주관식 퀴즈`, // 제목 자동 생성
-                subject,
+                title: `주관식 퀴즈`, // 제목 자동 생성
+                major: majorId,
+                subject: subjectId,
                 type: 'subjective',
                 content: question,
                 answer,
+                options: [], // 주관식 퀴즈도 options 필드를 빈 배열로 추가
             };
 
             await api.post('/api/quizzes', quizData);
@@ -43,20 +47,6 @@ const SubjectiveQuizCreatePage = () => {
                     </div>
 
                     <div className="space-y-6">
-                        {/* 과목 입력 */}
-                        <div>
-                            <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
-                                과목
-                            </label>
-                            <input
-                                type="text"
-                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                                placeholder="예: 데이터베이스"
-                                value={subject}
-                                onChange={(e) => setSubject(e.target.value)}
-                            />
-                        </div>
-
                         {/* 문제 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
 
 const MultipleChoiceQuizCreatePage = () => {
     const navigate = useNavigate();
-    const [subject, setSubject] = useState('');
+    const location = useLocation();
+    const { majorId, subjectId } = location.state || {};
+
     const [question, setQuestion] = useState('');
     const [options, setOptions] = useState(['', '', '', '']);
     const [correctAnswer, setCorrectAnswer] = useState('');
@@ -17,15 +19,16 @@ const MultipleChoiceQuizCreatePage = () => {
     };
 
     const handleSubmit = async () => {
-        if (!subject || !question || options.some(opt => !opt.trim()) || !correctAnswer) {
-            alert('과목, 문제, 모든 보기, 정답을 입력해주세요.');
+        if (!question || options.some(opt => !opt.trim()) || !correctAnswer) {
+            alert('문제, 모든 보기, 정답을 입력해주세요.');
             return;
         }
 
         try {
             const quizData = {
-                title: `${subject} - 객관식 퀴즈`, // 제목 자동 생성
-                subject,
+                title: `객관식 퀴즈`, // 제목 자동 생성
+                major: majorId,
+                subject: subjectId,
                 type: 'multiple',
                 content: question,
                 options,
@@ -51,20 +54,6 @@ const MultipleChoiceQuizCreatePage = () => {
                     </div>
 
                     <div className="space-y-6">
-                        {/* 과목 입력 */}
-                        <div>
-                            <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
-                                과목
-                            </label>
-                            <input
-                                type="text"
-                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                                placeholder="예: 자료구조"
-                                value={subject}
-                                onChange={(e) => setSubject(e.target.value)}
-                            />
-                        </div>
-
                         {/* 문제 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
