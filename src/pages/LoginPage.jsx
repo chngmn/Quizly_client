@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
-import StartButton from '../components/StartButton';
 import kakaoLoginIcon from '../assets/kakaologin.png';
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { authAPI } from '../utils/api';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const kakao = window.Kakao;
-    // JavaScript 키를 사용하여 카카오 SDK 초기화
-    // 여기에 실제 발급받은 JavaScript 키를 입력하세요.
     if (!kakao.isInitialized()) {
       kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
     }
@@ -26,6 +28,55 @@ const LoginPage = () => {
     });
   };
 
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      // 기본 검증
+      if (!email || !password) {
+        setError('이메일과 비밀번호를 모두 입력해주세요.');
+        return;
+      }
+
+      // 이메일 형식 검증
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setError('유효한 이메일 주소를 입력해주세요.');
+        return;
+      }
+
+      const response = await authAPI.login({ email, password });
+      
+      // 로그인 성공 시 토큰과 사용자 정보 저장
+      localStorage.setItem('quizly_token', response.token);
+      localStorage.setItem('user_nickname', response.user.nickname);
+      if (response.user.profileImage) {
+        localStorage.setItem('user_profile_image', response.user.profileImage);
+      }
+
+      // 자동 로그인 설정
+      if (rememberMe) {
+        localStorage.setItem('remember_me', 'true');
+      } else {
+        localStorage.removeItem('remember_me');
+      }
+
+      // 메인 페이지로 이동
+      navigate('/main');
+    } catch (error) {
+      console.error('로그인 실패:', error);
+      if (error.response?.data?.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="h-screen bg-white overflow-hidden">
       {/* 로고 */}
@@ -36,7 +87,6 @@ const LoginPage = () => {
       {/* 로그인 폼 */}
       <div className="flex flex-col items-center justify-center h-full px-4">
         <div className="w-full max-w-md">
-          {/* 왼쪽 정렬로 변경 */}
           <h1 className="text-3xl font-bold text-left mb-2">로그인</h1>
           
           <div className="text-left text-gray-600 mb-8">
@@ -46,7 +96,14 @@ const LoginPage = () => {
             </a>
           </div>
 
-          <div className="space-y-6">
+          {/* 에러 메시지 */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleEmailLogin} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-left text-sm text-gray-600 mb-1">
                 이메일
@@ -60,6 +117,7 @@ const LoginPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-12 pr-3 py-3 border-b border-gray-300 focus:border-[#0C21C1] focus:outline-none bg-transparent text-left"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -77,11 +135,13 @@ const LoginPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-12 pr-3 py-3 border-b border-gray-300 focus:border-[#0C21C1] focus:outline-none bg-transparent text-left"
                   required
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3 text-gray-400 text-xl hover:text-gray-600"
+                  disabled={isLoading}
                 >
                   {showPassword ? <MdVisibility /> : <MdVisibilityOff />}
                 </button>
@@ -95,6 +155,7 @@ const LoginPage = () => {
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="mr-2"
+                  disabled={isLoading}
                 />
                 <span className="text-sm text-gray-600">자동 로그인</span>
               </label>
@@ -103,9 +164,15 @@ const LoginPage = () => {
               </a>
             </div>
 
-            {/* StartButton 컴포넌트로 메인 페이지로 이동 */}
-            <StartButton text="로그인" to="/main" />
-          </div>
+            {/* 로그인 버튼 */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-[#0C21C1] text-white py-3 px-6 rounded-lg hover:bg-[#0A1A9A] transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? '로그인 중...' : '로그인'}
+            </button>
+          </form>
 
           <div className="mt-4 text-center">
             <p className="text-gray-400 text-sm">or continue with</p>
@@ -115,6 +182,7 @@ const LoginPage = () => {
             <button
               onClick={handleKakaoLogin}
               className="transition duration-200"
+              disabled={isLoading}
             >
               <img 
                 src={kakaoLoginIcon} 
