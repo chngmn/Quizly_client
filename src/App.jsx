@@ -17,6 +17,7 @@ import MyQuizzesPage from './pages/MyQuizzesPage';
 import MyinfoPage from './pages/MyinfoPage';
 import QuizEditPage from './pages/QuizEditPage';
 import ProtectedRoute from './components/ProtectedRoute'; // ProtectedRoute 임포트
+import KakaoSignupPage from './pages/KakaoSignupPage';
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/oauth" element={<KakaoRedirectPage />} />
         <Route path="/signup" element={<SignupPage />} />
-
+        <Route path="/kakao-signup" element={<KakaoSignupPage />} />
         {/* 로그인 보호가 필요한 라우트들 */}
         <Route element={<ProtectedRoute />}>
           <Route path="/main" element={<MainPage />} />

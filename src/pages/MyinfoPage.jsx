@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdEdit, MdLogout, MdCamera, MdVisibility, MdVisibilityOff, MdSave } from 'react-icons/md';
+import { MdEdit, MdLogout, MdCamera, MdVisibility, MdVisibilityOff, MdSave, MdDelete } from 'react-icons/md';
 import Navbar from '../components/Navbar';
 
 const MyinfoPage = () => {
@@ -24,6 +24,34 @@ const MyinfoPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
+
+    // 한글 변환 함수 추가
+    const genderToKorean = (g) => {
+        if (g === 'male') return '남성';
+        if (g === 'female') return '여성';
+        if (g === 'other') return '기타';
+        return g;
+    };
+    const schoolToKorean = (s) => {
+        const map = {
+            seoul_national: '서울대학교',
+            yonsei: '연세대학교',
+            korea: '고려대학교',
+            sungkyunkwan: '성균관대학교',
+            hanyang: '한양대학교',
+            kyunghee: '경희대학교',
+            sogang: '서강대학교',
+            hongik: '홍익대학교',
+            dongguk: '동국대학교',
+            chungang: '중앙대학교',
+            kookmin: '국민대학교',
+            sejong: '세종대학교',
+            konkuk: '건국대학교',
+            kaist: '카이스트',
+            other: '기타',
+        };
+        return map[s] || s;
+    };
 
     useEffect(() => {
         fetchUserInfo();
@@ -172,6 +200,35 @@ const MyinfoPage = () => {
     };
 
     const hasChanges = JSON.stringify(userInfo) !== JSON.stringify(originalUserInfo);
+
+    const handleWithdraw = async () => {
+        if (!window.confirm('정말로 회원 탈퇴를 진행하시겠습니까? 탈퇴 시 모든 정보가 삭제됩니다.')) return;
+        const token = localStorage.getItem('quizly_token');
+        if (!token) {
+            alert('로그인이 필요합니다.');
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:8000/api/user', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            if (response.ok) {
+                localStorage.removeItem('quizly_token');
+                localStorage.removeItem('user_nickname');
+                localStorage.removeItem('user_profile_image');
+                alert('회원 탈퇴가 완료되었습니다.');
+                navigate('/login');
+            } else {
+                const data = await response.json();
+                alert(data.error || '회원 탈퇴에 실패했습니다.');
+            }
+        } catch (error) {
+            alert('회원 탈퇴 중 오류가 발생했습니다.');
+        }
+    };
 
     if (!userInfo.isLoggedIn) {
         return (
@@ -424,13 +481,21 @@ const MyinfoPage = () => {
                 </div>
             </div>
 
-            {/* 로그아웃 버튼 - 오른쪽 아래 고정 */}
-            <button
-                onClick={handleLogout}
-                className="fixed bottom-6 right-6 bg-white text-[#0C21C1] font-bold] rounded-full p-4 hover:bg-blue-200 transition-colors shadow-lg"
-            >
-                <MdLogout size={24} />
-            </button>
+            {/* 로그아웃/회원탈퇴 버튼 - 오른쪽 아래 고정 */}
+            <div className="fixed bottom-6 right-6 flex flex-col items-end space-y-3">
+                <button
+                    onClick={handleLogout}
+                    className="bg-white text-[#0C21C1] font-bold rounded-full p-4 hover:bg-blue-200 transition-colors shadow-lg"
+                >
+                    <MdLogout size={24} />
+                </button>
+                <button
+                    onClick={handleWithdraw}
+                    className="bg-white text-red-500 font-bold rounded-full p-4 hover:bg-red-100 transition-colors shadow-lg"
+                >
+                    <MdDelete size={24} />
+                </button>
+            </div>
         </div>
     );
 };

@@ -20,11 +20,17 @@ const KakaoRedirectPage = () => {
           const data = response.data;
           console.log('백엔드 응답:', data);
 
-          localStorage.setItem('quizly_token', data.token);
-          localStorage.setItem('user_nickname', data.user.nickname); // 닉네임 저장
-          localStorage.setItem('user_profile_image', data.user.profileImage); // 프로필 이미지 URL 저장
-
-          navigate('/main');
+          if (data.needsAdditionalInfo) {
+            // localStorage에 임시 저장 (navigate state 유실 방지)
+            localStorage.setItem('kakao_signup_info', JSON.stringify(data));
+            navigate('/kakao-signup', { state: data });
+          } else {
+            // 기존 유저: 바로 로그인
+            localStorage.setItem('quizly_token', data.token);
+            localStorage.setItem('user_nickname', data.user.nickname); // 닉네임 저장
+            localStorage.setItem('user_profile_image', data.user.profileImage); // 프로필 이미지 URL 저장
+            navigate('/main');
+          }
 
         } catch (error) {
           console.error('로그인 처리 중 오류 발생:', error);
@@ -41,7 +47,7 @@ const KakaoRedirectPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <p>로그인 처리 중...</p>
+      <p>가입 처리 중...</p>
     </div>
   );
 };
