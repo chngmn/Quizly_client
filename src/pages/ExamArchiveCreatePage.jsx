@@ -89,22 +89,25 @@ const ExamArchiveCreatePage = () => {
         }
 
         try {
-            const quizData = {
-                title,
-                major: majorId,
-                subject: subjectId,
-                type: 'exam_archive',
-                content: `족보 내용: ${title} (${examYear}년 ${examSemester} ${examType})`,
-                explanation: description, // 족보의 경우 explanation 필드를 활용
-                answer: 'N/A', // 족보는 정답 개념이 없으므로 N/A
-                options: [], // 족보는 보기가 없으므로 빈 배열
-            };
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('major', majorId);
+            formData.append('subject', subjectId);
+            formData.append('type', 'exam_archive');
+            formData.append('content', `족보 내용: ${title} (${examYear}년 ${examSemester} ${examType})`);
+            formData.append('explanation', description);
+            formData.append('answer', 'N/A');
+            formData.append('options', JSON.stringify([])); // 빈 배열을 JSON 문자열로 변환
 
-            // 파일 업로드 로직은 추후 구현 (현재는 파일 데이터만 포함)
-            // 실제 파일 업로드는 FormData를 사용하고 별도의 API 엔드포인트가 필요
-            // quizData.files = files.map(file => file.name); // 예시
+            files.forEach((file) => {
+                formData.append('files', file);
+            });
 
-            await api.post('/api/quizzes', quizData);
+            await api.post('/api/quizzes', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             alert('족보가 성공적으로 등록되었습니다!');
             navigate('/my-quizzes');
         } catch (error) {
