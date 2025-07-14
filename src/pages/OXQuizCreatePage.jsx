@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
 
 const OXQuizCreatePage = () => {
     const navigate = useNavigate();
-    const [subject, setSubject] = useState('');
+    const location = useLocation();
+    const { majorId, subjectId } = location.state || {}; // QuizUploadPage에서 전달받은 ID
+
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
 
     const handleSubmit = async () => {
-        if (!subject || !question || !answer) {
-            alert('과목, 문제, 정답을 모두 입력해주세요.');
+        if (!question || !answer) {
+            alert('문제와 정답을 모두 입력해주세요.');
             return;
         }
 
         try {
             const quizData = {
-                title: `${subject} - O/X 퀴즈`, // 제목은 과목명으로 자동 생성
-                subject,
+                title: `O/X 퀴즈`, // 제목은 여기서 간단히 설정
+                major: majorId, // ID 전달
+                subject: subjectId, // ID 전달
                 type: 'ox',
                 content: question,
                 answer,
@@ -44,20 +47,6 @@ const OXQuizCreatePage = () => {
                     </div>
 
                     <div className="space-y-8">
-                        {/* 과목 입력 */}
-                        <div>
-                            <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
-                                과목
-                            </label>
-                            <input
-                                type="text"
-                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                                placeholder="예: 운영체제"
-                                value={subject}
-                                onChange={(e) => setSubject(e.target.value)}
-                            />
-                        </div>
-
                         {/* 문제 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
