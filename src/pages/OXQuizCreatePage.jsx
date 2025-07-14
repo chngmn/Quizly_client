@@ -18,19 +18,21 @@ const OXQuizCreatePage = () => {
         }
 
         try {
-            const quizData = {
-                title: `O/X 퀴즈`, // 제목은 여기서 간단히 설정
-                major: majorId, // ID 전달
-                subject: subjectId, // ID 전달
-                type: 'ox',
-                content: question,
-                answer,
-                options: [], // OX 퀴즈도 options 필드를 빈 배열로 추가
-            };
+            const formData = new FormData();
+            formData.append('major', majorId);
+            formData.append('subject', subjectId);
+            formData.append('type', 'ox');
+            formData.append('content', question);
+            formData.append('answer', answer);
+            formData.append('options', JSON.stringify([])); // options를 JSON 문자열로 변환
 
-            await api.post('/api/quizzes', quizData);
+            await api.post('/api/quizzes', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             alert('퀴즈가 성공적으로 등록되었습니다!');
-            navigate('/my-quizzes'); // 내 퀴즈 목록으로 이동
+            navigate('/my-quizzes');
         } catch (error) {
             console.error('퀴즈 등록 실패:', error);
             alert('퀴즈 등록에 실패했습니다.');

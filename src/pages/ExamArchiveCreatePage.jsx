@@ -90,7 +90,6 @@ const ExamArchiveCreatePage = () => {
 
         try {
             const formData = new FormData();
-            formData.append('title', title);
             formData.append('major', majorId);
             formData.append('subject', subjectId);
             formData.append('type', 'exam_archive');

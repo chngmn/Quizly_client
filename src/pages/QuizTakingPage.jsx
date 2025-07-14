@@ -1,82 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import logoImage from '../assets/logo_1.png'; // logo.png 임포트
+import logoImage from '../assets/logo_1.png';
 import api from '../utils/api';
-
-const dummyQuizzes = [
-  {
-    id: 1,
-    question: "운영체제에서 프로세스 스케줄링의 목적은 CPU 활용도를 높이는 것이다. (O/X)",
-    type: "OX",
-    answer: "O",
-  },
-  {
-    id: 2,
-    question: "다음 중 객체지향 프로그래밍의 4가지 주요 특징이 아닌 것은?",
-    type: "MULTIPLE_CHOICE",
-    options: ["캡슐화", "상속", "다형성", "추상화", "병렬성"],
-    answer: "병렬성",
-  },
-  {
-    id: 3,
-    question: "데이터베이스에서 여러 테이블의 데이터를 결합하는 데 사용되는 SQL 키워드는 무엇인가?",
-    type: "SUBJECTIVE",
-    answer: "JOIN",
-  },
-  {
-    id: 4,
-    question: "컴퓨터 네트워크에서 IP 주소를 물리적 주소(MAC 주소)로 변환하는 프로토콜은 ARP이다. (O/X)",
-    type: "OX",
-    answer: "O",
-  },
-  {
-    id: 5,
-    question: "다음 중 운영체제의 역할이 아닌 것은?",
-    type: "MULTIPLE_CHOICE",
-    options: ["자원 관리", "프로세스 관리", "파일 시스템 관리", "하드웨어 설계", "네트워크 관리"],
-    answer: "하드웨어 설계",
-  },
-];
 
 const QuizTakingPage = () => {
   const location = useLocation();
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
+  const [quizzes, setQuizzes] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
-  const [answered, setAnswered] = useState(false); // 문제 답변 여부 상태 추가
-  const [userSelectedOption, setUserSelectedOption] = useState(null); // 사용자가 선택한 객관식 옵션
+  const [answered, setAnswered] = useState(false);
+  const [userSelectedOption, setUserSelectedOption] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const queryParams = new URLSearchParams(location.search);
-  const major = queryParams.get('major');
-  const subject = queryParams.get('subject');
-  const chapter = queryParams.get('chapter');
-  const quizType = queryParams.get('type');
+  // QuizPage에서 전달받은 데이터
+  const { majorId, subjectId, quizType, quizCount } = location.state || {};
 
-  const currentQuiz = dummyQuizzes[currentQuizIndex];
+  // 서버의 퀴즈 유형과 클라이언트의 퀴즈 유형 매핑
+  const quizTypeMap = {
+    'OX': 'ox',
+    'MULTIPLE_CHOICE': 'multiple',
+    'SUBJECTIVE': 'subjective',
+    'EXAM_ARCHIVE': 'exam_archive',
+  };
 
-  // 피드백 표시 후 2초 뒤에 사라지도록 하는 useEffect (자동 다음 문제 제거)
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      if (!majorId || !subjectId || !quizType || !quizCount) {
+        setError('퀴즈를 시작하기 위한 정보가 부족합니다. 이전 페이지로 돌아가 다시 선택해주세요.');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const serverQuizType = quizTypeMap[quizType];
+        if (!serverQuizType) {
+          setError('유효하지 않은 퀴즈 유형입니다.');
+          setLoading(false);
+          return;
+        }
+
+        const response = await api.get('/api/quizzes', {
+          params: {
+            majorId,
+            subjectId,
+            type: serverQuizType,
+            limit: quizCount,
+          },
+        });
+        setQuizzes(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error('퀴즈를 불러오는 데 실패했습니다:', err);
+        setError('퀴즈를 불러오는 데 실패했습니다.');
+        setLoading(false);
+      }
+    };
+
+    fetchQuizzes();
+  }, [majorId, subjectId, quizType, quizCount]);
+
+  const currentQuiz = quizzes[currentQuizIndex];
+
   useEffect(() => {
     if (showFeedback) {
       const timer = setTimeout(() => {
         setShowFeedback(false);
-        setFeedback(null); // 피드백 메시지 초기화
+        setFeedback(null);
       }, 2000);
       return () => clearTimeout(timer);
     }
   }, [showFeedback]);
 
-  const handleAnswerSubmit = (answer) => {
-    if (answered) return; // 이미 답변했으면 중복 제출 방지
+  const handleAnswerSubmit = async (answer) => {
+    if (answered) return;
 
-    setUserSelectedOption(answer); // 사용자가 선택한 옵션 저장
+    setUserSelectedOption(answer);
 
-    let isCorrect;
-    if (currentQuiz.type === 'SUBJECTIVE') {
+    let isCorrect = false;
+    if (currentQuiz.type === 'subjective') {
       isCorrect = answer.toLowerCase() === currentQuiz.answer.toLowerCase();
-    } else {
+    } else if (currentQuiz.type === 'multiple') {
+      isCorrect = answer === currentQuiz.options[parseInt(currentQuiz.answer)];
+    } else if (currentQuiz.type === 'ox') {
       isCorrect = answer === currentQuiz.answer;
     }
 
@@ -84,16 +95,26 @@ const QuizTakingPage = () => {
       setFeedback('정답입니다!');
     } else {
       setFeedback('오답입니다!');
+      try {
+        await api.post('/api/records', {
+          quizId: currentQuiz._id,
+          isCorrect: false,
+          submittedAnswer: answer,
+          correctAnswer: currentQuiz.answer,
+        });
+      } catch (recordError) {
+        console.error('오답 기록 실패:', recordError);
+      }
     }
     setShowFeedback(true);
-    setAnswered(true); // 답변 완료 상태로 변경
+    setAnswered(true);
   };
 
   const handleNextQuestion = () => {
-    setUserAnswer(''); // 사용자 입력 초기화
-    setAnswered(false); // 답변 상태 초기화
-    setUserSelectedOption(null); // 선택 옵션 초기화
-    setShowFeedback(false); // 피드백 즉시 숨기기
+    setUserAnswer('');
+    setAnswered(false);
+    setUserSelectedOption(null);
+    setShowFeedback(false);
     setCurrentQuizIndex((prevIndex) => prevIndex + 1);
   };
 
@@ -101,7 +122,7 @@ const QuizTakingPage = () => {
     if (!currentQuiz) return null;
 
     switch (currentQuiz.type) {
-      case 'OX':
+      case 'ox':
         return (
           <div className="flex justify-center space-x-8">
             <button
@@ -125,24 +146,22 @@ const QuizTakingPage = () => {
               X
             </button>
           </div>
-
-
         );
-      case 'MULTIPLE_CHOICE':
+      case 'multiple':
         return (
           <div className="flex flex-col space-y-2">
             {currentQuiz.options.map((option, index) => (
               <button
                 key={index}
-                className={`p-3 rounded-md font-semibold transition-colors duration-200 border-2 ${answered && option === currentQuiz.answer
-                  ? 'bg-green-500 text-white border-green-500' // 정답일 경우
-                  : answered && option === userSelectedOption && option !== currentQuiz.answer
-                    ? 'bg-red-500 text-white border-red-500' // 오답일 경우
+                className={`p-3 rounded-md font-semibold transition-colors duration-200 border-2 ${answered && option === currentQuiz.options[parseInt(currentQuiz.answer)]
+                  ? 'bg-green-500 text-white border-green-500'
+                  : answered && option === userSelectedOption && option !== currentQuiz.options[parseInt(currentQuiz.answer)]
+                    ? 'bg-red-500 text-white border-red-500'
                     : answered
-                      ? 'bg-gray-200 text-gray-700 border-gray-300 opacity-50 cursor-not-allowed' // 답변 후 다른 선택지
+                      ? 'bg-gray-200 text-gray-700 border-gray-300 opacity-50 cursor-not-allowed'
                       : option === userSelectedOption
-                        ? 'bg-[#0C21C1] text-white border-[#0C21C1]' // 선택된 옵션
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-[#0C21C1] hover:text-[#0C21C1]' // 기본 상태
+                        ? 'bg-[#0C21C1] text-white border-[#0C21C1]'
+                        : 'bg-white text-gray-700 border-gray-300 hover:border-[#0C21C1] hover:text-[#0C21C1]'
                   }`}
                 onClick={() => handleAnswerSubmit(option)}
                 disabled={answered}
@@ -152,7 +171,7 @@ const QuizTakingPage = () => {
             ))}
           </div>
         );
-      case 'SUBJECTIVE':
+      case 'subjective':
         return (
           <div className="flex flex-col space-y-2">
             <input
@@ -162,7 +181,7 @@ const QuizTakingPage = () => {
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
               onKeyPress={(e) => {
-                if (e.key === 'Enter' && !answered) { // 답변하지 않았을 때만 Enter 키 작동
+                if (e.key === 'Enter' && !answered) {
                   handleAnswerSubmit(userAnswer);
                 }
               }}
@@ -177,12 +196,44 @@ const QuizTakingPage = () => {
             </button>
           </div>
         );
+      case 'exam_archive':
+        return (
+          <div className="w-full h-[500px]">
+            {currentQuiz.files && currentQuiz.files.length > 0 ? (
+              <iframe
+                src={`http://localhost:8000${currentQuiz.files[0]}`}
+                width="100%"
+                height="100%"
+                style={{ border: 'none' }}
+                title="족보 미리보기"
+              ></iframe>
+            ) : (
+              <p className="text-gray-500">첨부된 족보 파일이 없습니다.</p>
+            )}
+          </div>
+        );
       default:
         return null;
     }
   };
 
-  if (!currentQuiz) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-xl font-semibold">퀴즈를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-xl font-semibold text-red-500">오류: {error}</p>
+      </div>
+    );
+  }
+
+  if (!currentQuiz || currentQuizIndex >= quizzes.length) {
     return (
       <div className="min-h-screen bg-white">
         <Navbar />
@@ -213,10 +264,10 @@ const QuizTakingPage = () => {
       <Navbar />
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] p-4">
         <h1 className="text-2xl font-bold mb-4">퀴즈 풀이</h1>
-        <p className="text-lg mb-6">{major} &gt; {subject} &gt; {chapter} &gt; {quizType}</p>
+        <p className="text-lg mb-6">{currentQuiz.major?.name} &gt; {currentQuiz.subject?.name} &gt; {currentQuiz.type}</p>
 
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl text-center relative">
-          <p className="text-xl font-medium mb-8">{currentQuiz.question}</p>
+          <p className="text-xl font-medium mb-8">{currentQuiz.content}</p>
           {renderQuizInput()}
 
           {showFeedback && (
@@ -229,16 +280,22 @@ const QuizTakingPage = () => {
               <p className="mt-4">{feedback}</p>
             </div>
           )}
-
-
         </div>
 
-        {answered && (
+        {answered && currentQuiz.type !== 'exam_archive' && (
           <button
             className="mt-8 p-3 rounded-md font-semibold bg-[#0C21C1] text-white hover:bg-[#0A1DA8]"
             onClick={handleNextQuestion}
           >
             다음 문제
+          </button>
+        )}
+        {currentQuiz.type === 'exam_archive' && (
+          <button
+            className="mt-8 p-3 rounded-md font-semibold bg-[#0C21C1] text-white hover:bg-[#0A1DA8]"
+            onClick={handleNextQuestion}
+          >
+            다음 족보
           </button>
         )}
       </div>
