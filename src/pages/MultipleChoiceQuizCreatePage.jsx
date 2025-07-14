@@ -25,17 +25,20 @@ const MultipleChoiceQuizCreatePage = () => {
         }
 
         try {
-            const quizData = {
-                title: `객관식 퀴즈`, // 제목 자동 생성
-                major: majorId,
-                subject: subjectId,
-                type: 'multiple',
-                content: question,
-                options,
-                answer: (parseInt(correctAnswer, 10) - 1).toString(),
-            };
+            const formData = new FormData();
+            formData.append('title', `객관식 퀴즈`);
+            formData.append('major', majorId);
+            formData.append('subject', subjectId);
+            formData.append('type', 'multiple');
+            formData.append('content', question);
+            formData.append('options', JSON.stringify(options)); // options를 JSON 문자열로 변환
+            formData.append('answer', correctAnswer); // answer는 문자열 그대로
 
-            await api.post('/api/quizzes', quizData);
+            await api.post('/api/quizzes', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             alert('퀴즈가 성공적으로 등록되었습니다!');
             navigate('/my-quizzes');
         } catch (error) {
