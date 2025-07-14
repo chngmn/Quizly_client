@@ -12,11 +12,10 @@ const WrongAnsPage = () => {
     
     const itemsPerPage = 3;
 
-    // 목업 데이터
+    // 목업 데이터 (제목 제거)
     const mockWrongAnswers = [
         {
             id: 1,
-            title: "이산수학 퀴즈",
             major: "전산학/컴퓨터과학",
             subject: "컴퓨터과학",
             quizType: "MULTIPLE_CHOICE",
@@ -28,7 +27,6 @@ const WrongAnsPage = () => {
         },
         {
             id: 2,
-            title: "회로이론 퀴즈",
             major: "전자공학",
             subject: "전기전자",
             quizType: "OX",
@@ -40,7 +38,6 @@ const WrongAnsPage = () => {
         },
         {
             id: 3,
-            title: "미시경제학 퀴즈",
             major: "경영학",
             subject: "경제학",
             quizType: "SUBJECTIVE",
@@ -52,7 +49,6 @@ const WrongAnsPage = () => {
         },
         {
             id: 4,
-            title: "자료구조 퀴즈",
             major: "전산학/컴퓨터과학",
             subject: "컴퓨터과학",
             quizType: "MULTIPLE_CHOICE",
@@ -64,7 +60,6 @@ const WrongAnsPage = () => {
         },
         {
             id: 5,
-            title: "열역학 퀴즈",
             major: "기계공학",
             subject: "기계공학",
             quizType: "OX",
@@ -76,7 +71,6 @@ const WrongAnsPage = () => {
         },
         {
             id: 6,
-            title: "알고리즘 퀴즈",
             major: "전산학/컴퓨터과학",
             subject: "컴퓨터과학",
             quizType: "SUBJECTIVE",
@@ -88,7 +82,6 @@ const WrongAnsPage = () => {
         },
         {
             id: 7,
-            title: "디지털논리회로 퀴즈",
             major: "전자공학",
             subject: "전기전자",
             quizType: "MULTIPLE_CHOICE",
@@ -100,7 +93,6 @@ const WrongAnsPage = () => {
         },
         {
             id: 8,
-            title: "마케팅 퀴즈",
             major: "경영학",
             subject: "경영학",
             quizType: "OX",
@@ -258,14 +250,16 @@ const WrongAnsPage = () => {
                         <div key={item.id} className="bg-white rounded-lg shadow-sm p-6 relative">
                             <div className="flex items-start">
                                 <div className="flex-1">
-                                    <h3 className="text-xl font-bold text-gray-800 mb-2 text-left">{item.title}</h3>
-                                    <p className="text-gray-700 text-sm mb-3 text-left">{item.question}</p>
-                                    <div className="flex items-center gap-4 text-left">
+                                    <p className="text-gray-700 text-sm mb-6 text-left">{item.question}</p>
+                                    <div className="flex items-center gap-6 text-left">
                                         <span className="text-gray-600">
                                             전공: <span className="font-semibold">{item.major}</span>
                                         </span>
                                         <span className="text-gray-600">
-                                            퀴즈 유형: <span className="font-semibold">{item.quizTypeKr}</span>
+                                            과목: <span className="font-semibold">{item.subject}</span>
+                                        </span>
+                                        <span className="text-gray-600">
+                                            유형: <span className="font-semibold">{item.quizTypeKr}</span>
                                         </span>
                                     </div>
                                 </div>

@@ -15,6 +15,7 @@ import ExamArchiveCreatePage from './pages/ExamArchiveCreatePage';
 import WrongAnsPage from './pages/WrongAnsPage';
 import MyQuizzesPage from './pages/MyQuizzesPage';
 import MyinfoPage from './pages/MyinfoPage';
+import QuizEditPage from './pages/QuizEditPage';
 import ProtectedRoute from './components/ProtectedRoute'; // ProtectedRoute 임포트
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path="/wrong-answers" element={<WrongAnsPage />} />
           <Route path="/my-quizzes" element={<MyQuizzesPage />} />
           <Route path="/my-info" element={<MyinfoPage />} />
+          <Route path="/quiz-edit/:quizId" element={<QuizEditPage />} />
         </Route>
       </Routes>
     </Router>
