@@ -88,4 +88,43 @@ api.interceptors.response.use(
   }
 );
 
+// 인증 관련 API 함수들
+export const authAPI = {
+  // 이메일/비밀번호 회원가입
+  signup: async (userData) => {
+    const response = await api.post('/api/auth/signup', userData);
+    return response.data;
+  },
+
+  // 이메일/비밀번호 로그인
+  login: async (credentials) => {
+    const response = await api.post('/api/auth/login', credentials);
+    return response.data;
+  },
+
+  // 카카오 로그인
+  kakaoLogin: async (code) => {
+    const response = await api.post('/api/auth/kakao', { code });
+    return response.data;
+  },
+
+  // 비밀번호 찾기
+  forgotPassword: async (email) => {
+    const response = await api.post('/api/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  // 로그아웃
+  logout: async () => {
+    const response = await api.post('/api/auth/logout');
+    return response.data;
+  },
+
+  // 토큰 재발급
+  refreshToken: async (userId) => {
+    const response = await api.post('/api/auth/refresh-token', { userId });
+    return response.data;
+  },
+};
+
 export default api;
