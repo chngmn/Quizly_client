@@ -93,6 +93,16 @@ const QuizTakingPage = () => {
 
     if (isCorrect) {
       setFeedback('정답입니다!');
+      try {
+        await api.post('/api/records', {
+          quizId: currentQuiz._id,
+          isCorrect: true,
+          submittedAnswer: answer,
+          correctAnswer: currentQuiz.answer,
+        });
+      } catch (recordError) {
+        console.error('정답 기록 실패:', recordError);
+      }
     } else {
       setFeedback('오답입니다!');
       try {

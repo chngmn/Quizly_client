@@ -258,10 +258,6 @@ const WrongAnsPage = () => {
                                                 유형: <span className="font-semibold">{Object.keys(quizTypeMap).find(key => quizTypeMap[key] === item.quiz.type) || item.quiz.type}</span>
                                             </span>
                                         </div>
-                                        <div className="mt-2 text-left">
-                                            <p className="text-red-600">내 답변: {item.submittedAnswer}</p>
-                                            <p className="text-green-600">정답: {item.correctAnswer}</p>
-                                        </div>
                                     </div>
                                     <div className="ml-20 flex flex-col items-end">
                                         <span className="text-gray-500 text-sm mb-3">{new Date(item.recordedAt).toLocaleDateString()}</span>
