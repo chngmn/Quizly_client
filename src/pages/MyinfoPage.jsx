@@ -76,8 +76,8 @@ const MyinfoPage = () => {
                 const userData = {
                     nickname: data.user.nickname || '',
                     email: data.user.email || '',
-                    gender: data.user.gender || '여',
-                    school: data.user.school || '카이스트',
+                    gender: data.user.gender || 'female',
+                    school: data.user.school || 'kaist',
                     profileImage: data.user.profileImage || '',
                     isLoggedIn: true
                 };
@@ -91,12 +91,16 @@ const MyinfoPage = () => {
             // localStorage의 정보로 폴백
             const nickname = localStorage.getItem('user_nickname');
             const profileImage = localStorage.getItem('user_profile_image');
+            const gender = localStorage.getItem('user_gender');
+            const school = localStorage.getItem('user_school');
+            const email = localStorage.getItem('user_email');
+            
             if (nickname) {
                 const userData = {
                     nickname: nickname,
-                    email: '',
-                    gender: '여',
-                    school: '카이스트',
+                    email: email || '',
+                    gender: gender || 'female',
+                    school: school || 'kaist',
                     profileImage: profileImage || '',
                     isLoggedIn: true
                 };
@@ -135,6 +139,15 @@ const MyinfoPage = () => {
                 // localStorage 업데이트
                 localStorage.setItem('user_nickname', userInfo.nickname);
                 localStorage.setItem('user_profile_image', userInfo.profileImage);
+                if (userInfo.gender) {
+                    localStorage.setItem('user_gender', userInfo.gender);
+                }
+                if (userInfo.school) {
+                    localStorage.setItem('user_school', userInfo.school);
+                }
+                if (userInfo.email) {
+                    localStorage.setItem('user_email', userInfo.email);
+                }
                 
                 setOriginalUserInfo(userInfo);
                 setIsEditing(false);
@@ -159,14 +172,40 @@ const MyinfoPage = () => {
             alert('비밀번호는 6자리 이상이어야 합니다.');
             return;
         }
-        
-        // 여기에 실제 비밀번호 변경 API 호출 로직 추가
-        // 지금은 간단히 성공 처리
-        alert('비밀번호가 변경되었습니다.');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-        setIsEditingPassword(false);
+
+        try {
+            const token = localStorage.getItem('quizly_token');
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                return;
+            }
+            const response = await fetch('http://localhost:8000/api/user/password', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                alert('비밀번호가 변경되었습니다.');
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setIsEditingPassword(false);
+            } else {
+                const data = await response.json();
+                alert(data.error || '비밀번호 변경에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('비밀번호 변경 실패:', error);
+            alert('비밀번호 변경에 실패했습니다.');
+        }
     };
 
     const handleCancel = () => {
@@ -178,6 +217,9 @@ const MyinfoPage = () => {
         localStorage.removeItem('quizly_token');
         localStorage.removeItem('user_nickname');
         localStorage.removeItem('user_profile_image');
+        localStorage.removeItem('user_gender');
+        localStorage.removeItem('user_school');
+        localStorage.removeItem('user_email');
         navigate('/login');
     };
 
@@ -219,6 +261,9 @@ const MyinfoPage = () => {
                 localStorage.removeItem('quizly_token');
                 localStorage.removeItem('user_nickname');
                 localStorage.removeItem('user_profile_image');
+                localStorage.removeItem('user_gender');
+                localStorage.removeItem('user_school');
+                localStorage.removeItem('user_email');
                 alert('회원 탈퇴가 완료되었습니다.');
                 navigate('/login');
             } else {
@@ -418,8 +463,9 @@ const MyinfoPage = () => {
                                 onChange={(e) => handleInputChange('gender', e.target.value)}
                                 className="w-full px-3 py-2 bg-gray-100 border-0 focus:outline-none focus:bg-gray-200 text-gray-800 text-left appearance-none"
                             >
-                                <option value="여">여</option>
-                                <option value="남">남</option>
+                                <option value="male">남성</option>
+                                <option value="female">여성</option>
+                                <option value="other">기타</option>
                             </select>
                             <div className="absolute right-3 top-2 pointer-events-none">
                                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -440,16 +486,21 @@ const MyinfoPage = () => {
                                 onChange={(e) => handleInputChange('school', e.target.value)}
                                 className="w-full px-3 py-2 bg-gray-100 border-0 focus:outline-none focus:bg-gray-200 text-gray-800 text-left appearance-none"
                             >
-                                <option value="카이스트">카이스트</option>
-                                <option value="서울대학교">서울대학교</option>
-                                <option value="연세대학교">연세대학교</option>
-                                <option value="고려대학교">고려대학교</option>
-                                <option value="포항공과대학교">포항공과대학교</option>
-                                <option value="성균관대학교">성균관대학교</option>
-                                <option value="한양대학교">한양대학교</option>
-                                <option value="중앙대학교">중앙대학교</option>
-                                <option value="경희대학교">경희대학교</option>
-                                <option value="기타">기타</option>
+                                <option value="seoul_national">서울대학교</option>
+                                <option value="yonsei">연세대학교</option>
+                                <option value="korea">고려대학교</option>
+                                <option value="kaist">카이스트</option>
+                                <option value="hanyang">한양대학교</option>
+                                <option value="sungkyunkwan">성균관대학교</option>
+                                <option value="sogang">서강대학교</option>
+                                <option value="kyunghee">경희대학교</option>
+                                <option value="dongguk">동국대학교</option>
+                                <option value="chungang">중앙대학교</option>
+                                <option value="kookmin">국민대학교</option>
+                                <option value="sejong">세종대학교</option>
+                                <option value="konkuk">건국대학교</option>
+                                <option value="hongik">홍익대학교</option>
+                                <option value="other">기타</option>
                             </select>
                             <div className="absolute right-3 top-2 pointer-events-none">
                                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

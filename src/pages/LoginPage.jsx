@@ -55,6 +55,15 @@ const LoginPage = () => {
       if (response.user.profileImage) {
         localStorage.setItem('user_profile_image', response.user.profileImage);
       }
+      if (response.user.gender) {
+        localStorage.setItem('user_gender', response.user.gender);
+      }
+      if (response.user.school) {
+        localStorage.setItem('user_school', response.user.school);
+      }
+      if (response.user.email) {
+        localStorage.setItem('user_email', response.user.email);
+      }
 
       // 자동 로그인 설정
       if (rememberMe) {

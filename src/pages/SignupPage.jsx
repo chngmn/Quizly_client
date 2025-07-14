@@ -122,6 +122,15 @@ const SignupPage = () => {
             if (response.user.profileImage) {
                 localStorage.setItem('user_profile_image', response.user.profileImage);
             }
+            if (response.user.gender) {
+                localStorage.setItem('user_gender', response.user.gender);
+            }
+            if (response.user.school) {
+                localStorage.setItem('user_school', response.user.school);
+            }
+            if (response.user.email) {
+                localStorage.setItem('user_email', response.user.email);
+            }
 
             navigate('/main');
         } catch (error) {
