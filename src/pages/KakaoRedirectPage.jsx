@@ -47,7 +47,7 @@ const KakaoRedirectPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <p>가입 처리 중...</p>
+      <p>로그인 처리 중...</p>
     </div>
   );
 };

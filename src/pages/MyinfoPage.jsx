@@ -159,14 +159,40 @@ const MyinfoPage = () => {
             alert('비밀번호는 6자리 이상이어야 합니다.');
             return;
         }
-        
-        // 여기에 실제 비밀번호 변경 API 호출 로직 추가
-        // 지금은 간단히 성공 처리
-        alert('비밀번호가 변경되었습니다.');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-        setIsEditingPassword(false);
+
+        try {
+            const token = localStorage.getItem('quizly_token');
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                return;
+            }
+            const response = await fetch('http://localhost:8000/api/user/password', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                alert('비밀번호가 변경되었습니다.');
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setIsEditingPassword(false);
+            } else {
+                const data = await response.json();
+                alert(data.error || '비밀번호 변경에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('비밀번호 변경 실패:', error);
+            alert('비밀번호 변경에 실패했습니다.');
+        }
     };
 
     const handleCancel = () => {
