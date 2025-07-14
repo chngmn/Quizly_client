@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import logoImage from '../assets/logo_1.png'; // logo.png 임포트
+import api from '../utils/api';
 
 const dummyQuizzes = [
   {

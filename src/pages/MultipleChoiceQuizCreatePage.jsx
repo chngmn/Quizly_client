@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import api from '../utils/api';
 
 const MultipleChoiceQuizCreatePage = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { major, subject, quizType } = location.state || {};
-
+    const [subject, setSubject] = useState('');
     const [question, setQuestion] = useState('');
     const [options, setOptions] = useState(['', '', '', '']);
     const [correctAnswer, setCorrectAnswer] = useState('');
@@ -17,26 +16,29 @@ const MultipleChoiceQuizCreatePage = () => {
         setOptions(newOptions);
     };
 
-    const handleSubmit = () => {
-        if (!question || options.some(option => !option.trim()) || !correctAnswer) {
-            alert('문제, 모든 보기, 정답을 입력해주세요.');
+    const handleSubmit = async () => {
+        if (!subject || !question || options.some(opt => !opt.trim()) || !correctAnswer) {
+            alert('과목, 문제, 모든 보기, 정답을 입력해주세요.');
             return;
         }
 
-        // 퀴즈 등록 API 호출 로직 추가 예정
-        const quizData = {
-            major,
-            subject,
-            quizType,
-            question,
-            options,
-            correctAnswer,
-            createdAt: new Date().toISOString()
-        };
+        try {
+            const quizData = {
+                title: `${subject} - 객관식 퀴즈`, // 제목 자동 생성
+                subject,
+                type: 'multiple',
+                content: question,
+                options,
+                answer: (parseInt(correctAnswer, 10) - 1).toString(),
+            };
 
-        console.log('객관식 퀴즈 등록:', quizData);
-        alert('객관식 퀴즈가 성공적으로 등록되었습니다!');
-        navigate('/quiz-upload');
+            await api.post('/api/quizzes', quizData);
+            alert('퀴즈가 성공적으로 등록되었습니다!');
+            navigate('/my-quizzes');
+        } catch (error) {
+            console.error('퀴즈 등록 실패:', error);
+            alert('퀴즈 등록에 실패했습니다.');
+        }
     };
 
     return (
@@ -46,19 +48,30 @@ const MultipleChoiceQuizCreatePage = () => {
                 <div className="w-full max-w-2xl">
                     <div className="text-center mb-8">
                         <h1 className="text-4xl text-[#0C21C1] font-bold mb-4">객관식 퀴즈 등록</h1>
-                        <p className="text-gray-600 text-lg">
-                            {major} {'>'} {subject} {'>'} 객관식 문제
-                        </p>
                     </div>
 
                     <div className="space-y-6">
+                        {/* 과목 입력 */}
+                        <div>
+                            <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
+                                과목
+                            </label>
+                            <input
+                                type="text"
+                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                                placeholder="예: 자료구조"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                            />
+                        </div>
+
                         {/* 문제 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
                                 문제
                             </label>
                             <textarea
-                                className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0C21C1] focus:border-[#0C21C1] text-gray-700 resize-none"
+                                className="w-full p-4 border border-gray-300 rounded-lg shadow-sm resize-none"
                                 rows="4"
                                 placeholder="객관식 문제를 입력하세요"
                                 value={question}
@@ -78,7 +91,7 @@ const MultipleChoiceQuizCreatePage = () => {
                                     </span>
                                     <input
                                         type="text"
-                                        className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0C21C1] focus:border-[#0C21C1] text-gray-700"
+                                        className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm"
                                         placeholder={`${index + 1}번 보기를 입력하세요`}
                                         value={option}
                                         onChange={(e) => handleOptionChange(index, e.target.value)}
@@ -112,14 +125,14 @@ const MultipleChoiceQuizCreatePage = () => {
                         {/* 등록 버튼 */}
                         <div className="flex justify-center space-x-4 mt-8">
                             <button
-                                onClick={() => navigate('/quiz-upload')}
-                                className="w-40 py-3 bg-gray-500 text-white font-semibold rounded-[32px] shadow-[0_4px_26px_rgba(0,0,0,0.3)] transition-all duration-300 hover:bg-gray-600 hover:shadow-[0_6px_30px_rgba(0,0,0,0.3)]"
+                                onClick={() => navigate(-1)}
+                                className="w-40 py-3 bg-gray-500 text-white font-semibold rounded-full shadow-lg"
                             >
                                 취소
                             </button>
                             <button
                                 onClick={handleSubmit}
-                                className="w-40 py-3 bg-[#0C21C1] text-white font-semibold rounded-[32px] shadow-[0_4px_26px_rgba(0,0,0,0.3)] transition-all duration-300 hover:bg-[#0A1DA8] hover:shadow-[0_6px_30px_rgba(0,0,0,0.3)]"
+                                className="w-40 py-3 bg-[#0C21C1] text-white font-semibold rounded-full shadow-lg"
                             >
                                 등록하기
                             </button>
