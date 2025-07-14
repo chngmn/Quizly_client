@@ -58,28 +58,31 @@ const WrongAnsPage = () => {
 
     // 오답 목록 불러오기
     useEffect(() => {
-        const fetchWrongAnswers = async () => {
+        const fetchWrongAnswersAndStats = async () => {
             try {
                 setLoading(true);
-                const response = await api.get('/api/records/wrong-answers');
-                setWrongAnswers(response.data);
-                setFilteredAnswers(response.data);
+                // 오답 목록 가져오기
+                const wrongAnswersResponse = await api.get('/api/records/wrong-answers');
+                setWrongAnswers(wrongAnswersResponse.data);
+                setFilteredAnswers(wrongAnswersResponse.data);
 
-                // 통계 계산 (서버에서 총 문제 수와 오답률을 제공하면 더 정확)
-                const totalWrongCount = response.data.length;
-                // 임시로 총 문제 수를 100으로 가정 (실제로는 서버에서 가져와야 함)
-                const assumedTotalQuestions = 100;
-                const wrongRate = totalWrongCount > 0 ? Math.round((totalWrongCount / assumedTotalQuestions) * 100) : 0;
-                setTotalStats({ totalQuestions: assumedTotalQuestions, wrongRate });
+                // 전체 푼 문제 수 가져오기
+                const totalQuizzesResponse = await api.get('/api/records/total-quizzes-taken');
+                const totalQuestions = totalQuizzesResponse.data.totalQuizzesTaken;
+                const totalWrongCount = wrongAnswersResponse.data.length;
+                
+                const wrongRate = totalQuestions > 0 ? Math.round((totalWrongCount / totalQuestions) * 100) : 0;
+                
+                setTotalStats({ totalQuestions, wrongRate });
 
                 setLoading(false);
             } catch (err) {
-                console.error('오답 목록을 불러오는 데 실패했습니다:', err);
-                setError('오답 목록을 불러오는 데 실패했습니다.');
+                console.error('데이터를 불러오는 데 실패했습니다:', err);
+                setError('데이터를 불러오는 데 실패했습니다.');
                 setLoading(false);
             }
         };
-        fetchWrongAnswers();
+        fetchWrongAnswersAndStats();
     }, []);
 
     // 필터링 로직
