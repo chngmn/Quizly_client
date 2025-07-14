@@ -42,9 +42,7 @@ function StartPage() {
           {textSets[currentTextIndex].sub}
         </p>
 
-        <Link to="/login">
-          <StartButton />
-        </Link>
+        <StartButton to="/login" />
       </div>
     </div>
   )
