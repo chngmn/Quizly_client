@@ -6,7 +6,7 @@ import api from '../utils/api';
 const QuizEditPage = () => {
     const { quizId } = useParams(); // URL 파라미터에서 퀴즈 ID 가져오기
     const navigate = useNavigate();
-    
+
     const [quizData, setQuizData] = useState(null); // 서버에서 불러온 원본 퀴즈 데이터
     const [question, setQuestion] = useState('');
     const [options, setOptions] = useState(['', '', '', '']);
@@ -120,21 +120,19 @@ const QuizEditPage = () => {
                             </label>
                             <div className="flex justify-center space-x-20">
                                 <button
-                                    className={`w-25 h-25 rounded-full font-bold text-2xl transition-all duration-200 border-4 ${
-                                        answer === 'O' 
-                                            ? 'bg-green-400 text-white border-green-400 shadow-lg' 
-                                            : 'bg-white text-gray-700 border-gray-300 hover:border-green-400 hover:text-green-400'
-                                    }`}
+                                    className={`w-25 h-25 rounded-full font-bold text-2xl transition-all duration-200 border-4 ${answer === 'O'
+                                        ? 'bg-green-400 text-white border-green-400 shadow-lg'
+                                        : 'bg-white text-gray-700 border-gray-300 hover:border-green-400 hover:text-green-400'
+                                        }`}
                                     onClick={() => setAnswer('O')}
                                 >
                                     O
                                 </button>
                                 <button
-                                    className={`w-25 h-25 rounded-full font-bold text-2xl transition-all duration-200 border-4 ${
-                                        answer === 'X' 
-                                            ? 'bg-red-500 text-white border-red-500 shadow-lg' 
-                                            : 'bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500'
-                                    }`}
+                                    className={`w-25 h-25 rounded-full font-bold text-2xl transition-all duration-200 border-4 ${answer === 'X'
+                                        ? 'bg-red-500 text-white border-red-500 shadow-lg'
+                                        : 'bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500'
+                                        }`}
                                     onClick={() => setAnswer('X')}
                                 >
                                     X
@@ -186,11 +184,10 @@ const QuizEditPage = () => {
                                 {options.map((option, index) => (
                                     <button
                                         key={index}
-                                        className={`w-12 h-12 rounded-full font-bold text-lg transition-all duration-200 border-2 ${
-                                            answer === (index + 1).toString()
-                                                ? 'bg-[#0C21C1] text-white border-[#0C21C1] shadow-lg'
-                                                : 'bg-white text-gray-700 border-gray-300 hover:border-[#0C21C1] hover:text-[#0C21C1]'
-                                        }`}
+                                        className={`w-12 h-12 rounded-full font-bold text-lg transition-all duration-200 border-2 ${answer === (index + 1).toString()
+                                            ? 'bg-[#0C21C1] text-white border-[#0C21C1] shadow-lg'
+                                            : 'bg-white text-gray-700 border-gray-300 hover:border-[#0C21C1] hover:text-[#0C21C1]'
+                                            }`}
                                         onClick={() => setAnswer((index + 1).toString())}
                                     >
                                         {index + 1}
