@@ -132,7 +132,7 @@ const MyQuizzesPage = () => {
     };
 
     const handleEditQuiz = (quizId) => {
-        console.log('퀴즈 수정 기능은 구현 예정입니다:', quizId);
+        navigate(`/quiz-edit/${quizId}`); // 퀴즈 수정 페이지로 이동
         setOpenMenuId(null);
     };
 

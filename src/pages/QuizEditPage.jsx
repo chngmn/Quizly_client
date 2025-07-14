@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import api from '../utils/api';
 
 const QuizEditPage = () => {
+    const { quizId } = useParams(); // URL 파라미터에서 퀴즈 ID 가져오기
     const navigate = useNavigate();
-    const { quizId } = useParams();
-    const location = useLocation();
-    const quizData = location.state?.quizData;
-
+    
+    const [quizData, setQuizData] = useState(null); // 서버에서 불러온 원본 퀴즈 데이터
     const [question, setQuestion] = useState('');
     const [options, setOptions] = useState(['', '', '', '']);
     const [answer, setAnswer] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [description, setDescription] = useState(''); // 족보용 description
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // 초기 데이터 설정
+    // 퀴즈 데이터 불러오기
     useEffect(() => {
-        if (quizData) {
-            setQuestion(quizData.question || '');
-            setOptions(quizData.options || ['', '', '', '']);
-            setAnswer(quizData.answer || '');
-        }
-    }, [quizData]);
+        const fetchQuizData = async () => {
+            try {
+                const response = await api.get(`/api/quizzes/${quizId}`);
+                const fetchedQuiz = response.data;
+                setQuizData(fetchedQuiz);
+                setQuestion(fetchedQuiz.content || '');
+                setOptions(fetchedQuiz.options || ['', '', '', '']);
+                setAnswer(fetchedQuiz.answer || '');
+                setDescription(fetchedQuiz.description || ''); // 족보용 description
+                setLoading(false);
+            } catch (err) {
+                console.error('퀴즈 데이터를 불러오는 데 실패했습니다:', err);
+                setError('퀴즈 데이터를 불러오는 데 실패했습니다.');
+                setLoading(false);
+            }
+        };
+
+        fetchQuizData();
+    }, [quizId]);
 
     const handleOptionChange = (index, value) => {
         const newOptions = [...options];
@@ -28,42 +43,66 @@ const QuizEditPage = () => {
         setOptions(newOptions);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        if (!quizData) return; // 퀴즈 데이터가 없으면 제출 안 함
+
+        // 필수 필드 검사
         if (!question || !answer) {
             alert('문제와 정답을 모두 입력해주세요.');
             return;
         }
 
-        // 객관식인 경우 모든 보기 확인
-        if (quizData?.type === 'MULTIPLE_CHOICE') {
-            if (options.some(option => !option.trim())) {
-                alert('모든 보기를 입력해주세요.');
-                return;
-            }
+        if (quizData.type === 'multiple' && options.some(option => !option.trim())) {
+            alert('객관식은 모든 보기를 입력해주세요.');
+            return;
         }
 
         setLoading(true);
+        try {
+            const updatedQuizData = {
+                title: quizData.title, // 제목은 변경하지 않음
+                major: quizData.major._id, // ID로 전달
+                subject: quizData.subject._id, // ID로 전달
+                type: quizData.type,
+                content: question,
+                answer: quizData.type === 'multiple' ? (parseInt(answer, 10) - 1).toString() : answer, // 객관식은 인덱스로 변환
+                options: quizData.type === 'multiple' || quizData.type === 'ox' ? options : [],
+                description: description, // 족보용 description
+                // files 필드는 수정에서 제외 (파일 수정은 별도 로직 필요)
+            };
 
-        // 백엔드 API 호출 (현재는 목업)
-        console.log('퀴즈 수정 데이터:', {
-            question,
-            options,
-            answer,
-            type: quizData?.type
-        });
-        
-        setTimeout(() => {
+            // FormData가 필요한 경우 (파일 업로드 포함된 경우)
+            let dataToSend;
+            let headers = { 'Content-Type': 'application/json' };
+
+            if (quizData.type === 'exam_archive') {
+                // 족보 수정 시 파일은 별도 처리 (현재는 파일 수정 기능 없음)
+                // FormData를 사용해야 하지만, 현재는 파일 필드가 없으므로 일반 JSON으로 보냄
+                // 만약 파일 수정 기능이 추가된다면 FormData로 변경해야 함
+                dataToSend = updatedQuizData;
+            } else {
+                dataToSend = updatedQuizData;
+            }
+
+            await api.put(`/api/quizzes/${quizId}`, dataToSend, { headers });
+
             alert('퀴즈가 성공적으로 수정되었습니다!');
             navigate('/my-quizzes');
-        }, 1000);
+        } catch (err) {
+            console.error('퀴즈 수정 실패:', err);
+            alert(err.response?.data?.error || '퀴즈 수정에 실패했습니다.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const renderQuizForm = () => {
-        switch (quizData?.type) {
-            case 'OX':
+        if (!quizData) return null;
+
+        switch (quizData.type) {
+            case 'ox':
                 return (
                     <div className="space-y-8">
-                        {/* 문제 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
                                 문제
@@ -76,8 +115,6 @@ const QuizEditPage = () => {
                                 onChange={(e) => setQuestion(e.target.value)}
                             />
                         </div>
-
-                        {/* 정답 선택 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
                                 정답
@@ -108,10 +145,9 @@ const QuizEditPage = () => {
                     </div>
                 );
 
-            case 'MULTIPLE_CHOICE':
+            case 'multiple':
                 return (
                     <div className="space-y-6">
-                        {/* 문제 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
                                 문제
@@ -124,8 +160,6 @@ const QuizEditPage = () => {
                                 onChange={(e) => setQuestion(e.target.value)}
                             />
                         </div>
-
-                        {/* 보기 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
                                 보기
@@ -145,8 +179,6 @@ const QuizEditPage = () => {
                                 </div>
                             ))}
                         </div>
-
-                        {/* 정답 선택 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
                                 정답 체크
@@ -170,10 +202,9 @@ const QuizEditPage = () => {
                     </div>
                 );
 
-            case 'SUBJECTIVE':
+            case 'subjective':
                 return (
                     <div className="space-y-6">
-                        {/* 문제 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
                                 문제
@@ -186,8 +217,6 @@ const QuizEditPage = () => {
                                 onChange={(e) => setQuestion(e.target.value)}
                             />
                         </div>
-
-                        {/* 정답 입력 */}
                         <div>
                             <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
                                 정답
@@ -202,6 +231,37 @@ const QuizEditPage = () => {
                         </div>
                     </div>
                 );
+            case 'exam_archive':
+                return (
+                    <div className="space-y-6">
+                        <div>
+                            <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
+                                족보 제목
+                            </label>
+                            <input
+                                type="text"
+                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                                placeholder="예: 2023년 2학기 운영체제 중간고사 족보"
+                                value={quizData.title}
+                                onChange={(e) => setQuizData({ ...quizData, title: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-left text-lg font-semibold text-gray-700 mb-3">
+                                설명
+                            </label>
+                            <textarea
+                                className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0C21C1] focus:border-[#0C21C1] text-gray-700 resize-none"
+                                rows="4"
+                                placeholder="족보에 대한 추가 설명을 입력하세요"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                        </div>
+                        {/* 파일 수정 기능은 추후 구현 */}
+                        <p className="text-gray-500">파일 수정 기능은 현재 지원되지 않습니다.</p>
+                    </div>
+                );
 
             default:
                 return <div>퀴즈 유형을 찾을 수 없습니다.</div>;
@@ -210,9 +270,10 @@ const QuizEditPage = () => {
 
     const getQuizTypeLabel = () => {
         switch (quizData?.type) {
-            case 'OX': return 'O/X 문제';
-            case 'MULTIPLE_CHOICE': return '객관식 문제';
-            case 'SUBJECTIVE': return '주관식 문제';
+            case 'ox': return 'O/X 문제';
+            case 'multiple': return '객관식 문제';
+            case 'subjective': return '주관식 문제';
+            case 'exam_archive': return '족보';
             default: return '문제';
         }
     };
@@ -225,13 +286,12 @@ const QuizEditPage = () => {
                     <div className="text-center mb-8">
                         <h1 className="text-4xl text-[#0C21C1] font-bold mb-4">퀴즈 수정</h1>
                         <p className="text-gray-600 text-lg">
-                            {quizData?.major} {'>'} {quizData?.subject} {'>'} {getQuizTypeLabel()}
+                            {quizData?.major?.name} {'>'} {quizData?.subject?.name} {'>'} {getQuizTypeLabel()}
                         </p>
                     </div>
 
                     {renderQuizForm()}
 
-                    {/* 수정 버튼 */}
                     <div className="flex justify-center space-x-4 mt-8">
                         <button
                             onClick={() => navigate('/my-quizzes')}
