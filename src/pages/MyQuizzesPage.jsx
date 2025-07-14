@@ -230,7 +230,6 @@ const MyQuizzesPage = () => {
                             <div key={quiz._id} className="bg-white rounded-lg shadow-sm p-6 relative">
                                 <div className="flex items-start">
                                     <div className="flex-1">
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2 text-left">{quiz.subject.name.substring(0, 50)}</h3>
                                         <p className="text-gray-700 text-sm mb-3 text-left">{quiz.content}</p>
                                         <div className="flex items-center gap-4 text-left">
                                             <span className="text-gray-600">
