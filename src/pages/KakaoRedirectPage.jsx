@@ -29,6 +29,15 @@ const KakaoRedirectPage = () => {
             localStorage.setItem('quizly_token', data.token);
             localStorage.setItem('user_nickname', data.user.nickname); // 닉네임 저장
             localStorage.setItem('user_profile_image', data.user.profileImage); // 프로필 이미지 URL 저장
+            if (data.user.gender) {
+              localStorage.setItem('user_gender', data.user.gender);
+            }
+            if (data.user.school) {
+              localStorage.setItem('user_school', data.user.school);
+            }
+            if (data.user.email) {
+              localStorage.setItem('user_email', data.user.email);
+            }
             navigate('/main');
           }
 
