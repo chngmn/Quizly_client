@@ -19,7 +19,6 @@ const SubjectiveQuizCreatePage = () => {
 
         try {
             const formData = new FormData();
-            formData.append('title', `주관식 퀴즈`);
             formData.append('major', majorId);
             formData.append('subject', subjectId);
             formData.append('type', 'subjective');

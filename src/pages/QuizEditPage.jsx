@@ -60,7 +60,6 @@ const QuizEditPage = () => {
         setLoading(true);
         try {
             const updatedQuizData = {
-                title: quizData.title, // 제목은 변경하지 않음
                 major: quizData.major._id, // ID로 전달
                 subject: quizData.subject._id, // ID로 전달
                 type: quizData.type,
@@ -242,8 +241,8 @@ const QuizEditPage = () => {
                                 type="text"
                                 className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                                 placeholder="예: 2023년 2학기 운영체제 중간고사 족보"
-                                value={quizData.title}
-                                onChange={(e) => setQuizData({ ...quizData, title: e.target.value })}
+                                value={quizData.content}
+                                onChange={(e) => setQuizData({ ...quizData, content: e.target.value })}
                             />
                         </div>
                         <div>

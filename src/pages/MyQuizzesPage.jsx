@@ -14,7 +14,7 @@ const MyQuizzesPage = () => {
     const [myQuizzes, setMyQuizzes] = useState([]);
     const [filteredQuizzes, setFilteredQuizzes] = useState([]);
     const [openMenuId, setOpenMenuId] = useState(null);
-    
+
     const itemsPerPage = 5; // 페이지 당 항목 수
 
     // 전공 목록 불러오기
@@ -68,15 +68,15 @@ const MyQuizzesPage = () => {
     // 필터링 로직
     useEffect(() => {
         let filtered = myQuizzes;
-        
+
         if (selectedMajorId) {
             filtered = filtered.filter(item => item.major._id === selectedMajorId);
         }
-        
+
         if (selectedSubjectId) {
             filtered = filtered.filter(item => item.subject._id === selectedSubjectId);
         }
-        
+
         if (selectedQuizType && selectedQuizType !== '전체') {
             filtered = filtered.filter(item => {
                 // 서버의 type은 소문자, 클라이언트의 quizTypes는 대소문자 혼용이므로 통일
@@ -89,7 +89,7 @@ const MyQuizzesPage = () => {
                 return item.type === quizTypeMap[selectedQuizType];
             });
         }
-        
+
         setFilteredQuizzes(filtered);
         setCurrentPage(1);
     }, [selectedMajorId, selectedSubjectId, selectedQuizType, myQuizzes]);
@@ -230,7 +230,7 @@ const MyQuizzesPage = () => {
                             <div key={quiz._id} className="bg-white rounded-lg shadow-sm p-6 relative">
                                 <div className="flex items-start">
                                     <div className="flex-1">
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2 text-left">{quiz.title}</h3>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2 text-left">{quiz.subject.name.substring(0, 50)}</h3>
                                         <p className="text-gray-700 text-sm mb-3 text-left">{quiz.content}</p>
                                         <div className="flex items-center gap-4 text-left">
                                             <span className="text-gray-600">
@@ -255,7 +255,7 @@ const MyQuizzesPage = () => {
                                                     <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                                                 </svg>
                                             </button>
-                                            
+
                                             {openMenuId === quiz._id && (
                                                 <div className="absolute right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-10 min-w-[120px]">
                                                     <button
@@ -310,21 +310,20 @@ const MyQuizzesPage = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
                         </button>
-                        
+
                         {getPageNumbers().map((pageNum) => (
                             <button
                                 key={pageNum}
                                 onClick={() => setCurrentPage(pageNum)}
-                                className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-                                    currentPage === pageNum
-                                        ? 'bg-[#0C21C1] text-white'
-                                        : 'text-gray-700 hover:bg-gray-100'
-                                }`}
+                                className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${currentPage === pageNum
+                                    ? 'bg-[#0C21C1] text-white'
+                                    : 'text-gray-700 hover:bg-gray-100'
+                                    }`}
                             >
                                 {pageNum}
                             </button>
                         ))}
-                        
+
                         <button
                             onClick={() => setCurrentPage(currentPage + 1)}
                             disabled={currentPage === totalPages}

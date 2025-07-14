@@ -19,7 +19,6 @@ const OXQuizCreatePage = () => {
 
         try {
             const formData = new FormData();
-            formData.append('title', `O/X 퀴즈`);
             formData.append('major', majorId);
             formData.append('subject', subjectId);
             formData.append('type', 'ox');

@@ -26,13 +26,12 @@ const MultipleChoiceQuizCreatePage = () => {
 
         try {
             const formData = new FormData();
-            formData.append('title', `객관식 퀴즈`);
             formData.append('major', majorId);
             formData.append('subject', subjectId);
             formData.append('type', 'multiple');
             formData.append('content', question);
-            formData.append('options', JSON.stringify(options)); // options를 JSON 문자열로 변환
-            formData.append('answer', correctAnswer); // answer는 문자열 그대로
+            formData.append('options', JSON.stringify(options));
+            formData.append('answer', correctAnswer);
 
             await api.post('/api/quizzes', formData, {
                 headers: {
