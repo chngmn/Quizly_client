@@ -20,7 +20,7 @@ const QuizTakingPage = () => {
 
   // QuizPage에서 전달받은 데이터
   const { majorId, subjectId, quizType, quizCount, initialQuizId } = location.state || {};
-  
+
   console.log('QuizTakingPage - location.state:', location.state);
   console.log('QuizTakingPage - initialQuizId:', initialQuizId);
 
@@ -42,7 +42,7 @@ const QuizTakingPage = () => {
 
       try {
         setLoading(true);
-        
+
         // initialQuizId가 있으면 해당 퀴즈만 가져옴
         if (initialQuizId) {
           console.log('Fetching specific quiz with ID:', initialQuizId);
@@ -76,16 +76,16 @@ const QuizTakingPage = () => {
         if (serverQuizType) params.type = serverQuizType;
 
         console.log('Fetching quizzes with params:', params);
-        
+
         const response = await api.get('/api/quizzes', { params });
         console.log('Quizzes response:', response.data);
-        
+
         if (response.data.length === 0) {
           setError('선택한 조건에 맞는 퀴즈가 없습니다. 다른 조건을 선택해주세요.');
           setLoading(false);
           return;
         }
-        
+
         setQuizzes(response.data);
         setLoading(false);
       } catch (err) {
