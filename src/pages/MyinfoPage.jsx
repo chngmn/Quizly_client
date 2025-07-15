@@ -42,12 +42,13 @@ const MyinfoPage = () => {
             kyunghee: '경희대학교',
             sogang: '서강대학교',
             hongik: '홍익대학교',
-            dongguk: '동국대학교',
+            ewha: '이화여자대학교',
             chungang: '중앙대학교',
-            kookmin: '국민대학교',
+            dgist: 'DGIST',
             sejong: '세종대학교',
             konkuk: '건국대학교',
             kaist: '카이스트',
+            sookmyung: '숙명여자대학교',
             other: '기타',
         };
         return map[s] || s;
@@ -510,12 +511,13 @@ const MyinfoPage = () => {
                                 <option value="sungkyunkwan">성균관대학교</option>
                                 <option value="sogang">서강대학교</option>
                                 <option value="kyunghee">경희대학교</option>
-                                <option value="dongguk">동국대학교</option>
+                                <option value="ewha">이화여자대학교</option>
                                 <option value="chungang">중앙대학교</option>
-                                <option value="kookmin">국민대학교</option>
+                                <option value="dgist">DGIST</option>
                                 <option value="sejong">세종대학교</option>
                                 <option value="konkuk">건국대학교</option>
                                 <option value="hongik">홍익대학교</option>
+                                <option value="sookmyung">숙명여자대학교</option>
                                 <option value="other">기타</option>
                             </select>
                             <div className="absolute right-3 top-2 pointer-events-none">
