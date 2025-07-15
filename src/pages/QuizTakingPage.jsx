@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import logoImage from '../assets/logo_1.png';
+import wrongAnsImage from '../assets/wrongans.png'; // 오답 이미지 추가
 import api from '../utils/api';
 
 const QuizTakingPage = () => {
@@ -270,20 +271,20 @@ const QuizTakingPage = () => {
       <div className="min-h-screen bg-white">
         <Navbar />
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] p-4">
-          <h1 className="text-3xl font-bold mb-4">퀴즈 종료</h1>
+          <h1 className="text-[#0C21C1] text-4xl font-bold mb-4">퀴즈 종료</h1>
           <p className="text-lg mb-16">모든 퀴즈를 푸셨습니다!</p>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 mb-16">
             <button
-              className="p-3 rounded-md font-semibold bg-[#0C21C1] text-white hover:bg-[#0A1DA8]"
+              className="p-3 rounded-md font-semibold border-2 bg-white text-gray-700 border-black-300 hover:border-[#0C21C1] hover:text-[#0C21C1]"
               onClick={() => navigate('/main')}
             >
-              메인화면으로 돌아가기
+              메인화면
             </button>
             <button
-              className="p-3 rounded-md font-semibold bg-red-500 text-white hover:bg-red-600"
+              className='p-3 rounded-md font-semibold border-2 bg-white text-gray-700 border-black-300 hover:border-red-600 hover:text-red-600'
               onClick={() => navigate('/wrong-answers')}
             >
-              오답노트로 이동
+              오답노트
             </button>
           </div>
         </div>
@@ -303,10 +304,10 @@ const QuizTakingPage = () => {
           {renderQuizInput()}
 
           {showFeedback && (
-            <div className={`absolute inset-0 flex flex-col items-center justify-center text-black text-3xl font-bold ${feedback === '정답입니다!' ? 'bg-opacity-90' : 'bg-opacity-90'}`}>
+            <div className={`absolute inset-0 flex flex-col items-center justify-center text-black text-3xl font-bold quiz-feedback-overlay ${feedback === '정답입니다!' ? 'quiz-feedback-correct' : 'quiz-feedback-incorrect'}`}>
               <img
-                src={logoImage}
-                alt="Quizly Logo"
+                src={feedback === '정답입니다!' ? logoImage : wrongAnsImage}
+                alt={feedback === '정답입니다!' ? "Quizly Logo" : "Wrong Answer"}
                 className={`w-32 h-40 ${feedback === '정답입니다!' ? 'animate-quiz-popup-fade-out animate-quiz-bounce' : 'animate-quiz-popup-fade-out'}`}
               />
               <p className="mt-4">{feedback}</p>
