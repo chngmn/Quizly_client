@@ -178,8 +178,21 @@ const MyQuizzesPage = () => {
         if (window.confirm('정말로 이 퀴즈를 삭제하시겠습니까?')) {
             try {
                 await api.delete(`/api/quizzes/${quizId}`);
+                // 내가 만든 퀴즈 목록에서 삭제된 퀴즈 제거
                 const updatedQuizzes = myQuizzes.filter(quiz => quiz._id !== quizId);
                 setMyQuizzes(updatedQuizzes);
+                
+                // 푼 퀴즈 목록에서도 삭제된 퀴즈 제거
+                const updatedSolvedQuizzes = solvedQuizzes.filter(record => record.quiz?._id !== quizId);
+                setSolvedQuizzes(updatedSolvedQuizzes);
+                
+                // 현재 선택된 탭에 따라 필터링된 퀴즈 목록도 업데이트
+                if (activeTab === 'created') {
+                    setFilteredQuizzes(prevFiltered => prevFiltered.filter(quiz => quiz._id !== quizId));
+                } else if (activeTab === 'solved') {
+                    setFilteredQuizzes(prevFiltered => prevFiltered.filter(record => record.quiz?._id !== quizId));
+                }
+                
                 alert('퀴즈가 성공적으로 삭제되었습니다.');
             } catch (error) {
                 console.error('퀴즈 삭제 실패:', error);
