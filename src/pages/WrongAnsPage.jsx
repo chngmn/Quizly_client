@@ -25,6 +25,18 @@ const WrongAnsPage = () => {
         'SUBJECTIVE': 'subjective',
         'EXAM_ARCHIVE': 'exam_archive',
     };
+    
+    // 서버 유형을 한국어로 변환하는 함수
+    const getQuizTypeForClient = (serverType) => {
+        const typeMap = {
+            'ox': 'O/X',
+            'multiple': '객관식',
+            'subjective': '주관식',
+            'exam_archive': '족보'
+        };
+        return typeMap[serverType] || serverType;
+    };
+    
     // 전공 목록 불러오기
     useEffect(() => {
         const fetchMajors = async () => {
@@ -255,7 +267,7 @@ const WrongAnsPage = () => {
                                                 과목: <span className="font-semibold">{item.quiz.subject?.name || '알 수 없음'}</span>
                                             </span>
                                             <span className="text-gray-600">
-                                                유형: <span className="font-semibold">{Object.keys(quizTypeMap).find(key => quizTypeMap[key] === item.quiz.type) || item.quiz.type}</span>
+                                                유형: <span className="font-semibold">{getQuizTypeForClient(item.quiz.type)}</span>
                                             </span>
                                         </div>
                                     </div>

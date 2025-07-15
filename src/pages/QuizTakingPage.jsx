@@ -18,7 +18,10 @@ const QuizTakingPage = () => {
   const [error, setError] = useState(null);
 
   // QuizPage에서 전달받은 데이터
-  const { majorId, subjectId, quizType, quizCount } = location.state || {};
+  const { majorId, subjectId, quizType, quizCount, initialQuizId } = location.state || {};
+  
+  console.log('QuizTakingPage - location.state:', location.state);
+  console.log('QuizTakingPage - initialQuizId:', initialQuizId);
 
   // 서버의 퀴즈 유형과 클라이언트의 퀴즈 유형 매핑
   const quizTypeMap = {
@@ -30,7 +33,7 @@ const QuizTakingPage = () => {
 
   useEffect(() => {
     const fetchQuizzes = async () => {
-      if (!majorId || !subjectId || !quizType || !quizCount) {
+      if (!majorId || !subjectId || !quizType) {
         setError('퀴즈를 시작하기 위한 정보가 부족합니다. 이전 페이지로 돌아가 다시 선택해주세요.');
         setLoading(false);
         return;
@@ -39,20 +42,39 @@ const QuizTakingPage = () => {
       try {
         setLoading(true);
         const serverQuizType = quizTypeMap[quizType];
+        console.log('QuizType conversion:', { clientType: quizType, serverType: serverQuizType });
         if (!serverQuizType) {
           setError('유효하지 않은 퀴즈 유형입니다.');
           setLoading(false);
           return;
         }
 
+        // initialQuizId가 있으면 해당 퀴즈만 가져옴
+        if (initialQuizId) {
+          console.log('Fetching specific quiz with ID:', initialQuizId);
+          try {
+            const response = await api.get(`/api/quizzes/${initialQuizId}`);
+            console.log('Specific quiz response:', response.data);
+            setQuizzes([response.data]);
+            setLoading(false);
+            return;
+          } catch (err) {
+            console.error('특정 퀴즈를 불러오는 데 실패했습니다:', err);
+            // 특정 퀴즈를 불러오는 데 실패하면 랜덤 퀴즈를 불러옴
+          }
+        }
+
+        // initialQuizId가 없거나 특정 퀴즈를 불러오는 데 실패한 경우 랜덤 퀴즈를 불러옴
+        console.log('Fetching random quizzes with params:', { majorId, subjectId, type: serverQuizType, limit: quizCount || 1 });
         const response = await api.get('/api/quizzes', {
           params: {
             majorId,
             subjectId,
             type: serverQuizType,
-            limit: quizCount,
+            limit: quizCount || 1,
           },
         });
+        console.log('Random quizzes response:', response.data);
         setQuizzes(response.data);
         setLoading(false);
       } catch (err) {
@@ -63,7 +85,7 @@ const QuizTakingPage = () => {
     };
 
     fetchQuizzes();
-  }, [majorId, subjectId, quizType, quizCount]);
+  }, [majorId, subjectId, quizType, quizCount, initialQuizId]);
 
   const currentQuiz = quizzes[currentQuizIndex];
 
