@@ -164,6 +164,18 @@ const MyinfoPage = () => {
     };
 
     const handlePasswordSave = async () => {
+        if (!currentPassword) {
+            alert('현재 비밀번호를 입력해주세요.');
+            return;
+        }
+        if (!newPassword) {
+            alert('새 비밀번호를 입력해주세요.');
+            return;
+        }
+        if (!confirmPassword) {
+            alert('새 비밀번호 확인을 입력해주세요.');
+            return;
+        }
         if (newPassword !== confirmPassword) {
             alert('새 비밀번호가 일치하지 않습니다.');
             return;
@@ -173,12 +185,14 @@ const MyinfoPage = () => {
             return;
         }
 
+        setIsLoading(true);
         try {
             const token = localStorage.getItem('quizly_token');
             if (!token) {
                 alert('로그인이 필요합니다.');
                 return;
             }
+            
             const response = await fetch('http://localhost:8000/api/user/password', {
                 method: 'PUT',
                 headers: {
@@ -191,20 +205,22 @@ const MyinfoPage = () => {
                 }),
             });
 
+            const data = await response.json();
+            
             if (response.ok) {
-                const data = await response.json();
-                alert('비밀번호가 변경되었습니다.');
+                alert('비밀번호가 성공적으로 변경되었습니다.');
                 setCurrentPassword('');
                 setNewPassword('');
                 setConfirmPassword('');
                 setIsEditingPassword(false);
             } else {
-                const data = await response.json();
                 alert(data.error || '비밀번호 변경에 실패했습니다.');
             }
         } catch (error) {
             console.error('비밀번호 변경 실패:', error);
-            alert('비밀번호 변경에 실패했습니다.');
+            alert('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
