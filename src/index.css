@@ -60,19 +60,15 @@
   }
 
   60% {
-    transform: translateY(-15px) rotate(5deg);
+    transform: translateY(-25px) rotate(5deg);
   }
 
   80% {
     transform: translateY(0) rotate(0deg);
   }
 
-  90% {
-    transform: translateY(-5px) rotate(-3deg);
-  }
-
   100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(-25px) rotate(-5deg);
   }
 }
 
@@ -81,15 +77,19 @@
   0% {
     transform: rotate(0deg);
   }
+
   25% {
     transform: rotate(10deg);
   }
+
   50% {
     transform: rotate(0deg);
   }
+
   75% {
     transform: rotate(-10deg);
   }
+
   100% {
     transform: rotate(0deg);
   }
@@ -101,6 +101,12 @@
     backdrop-filter: blur(0px);
     background-color: rgba(255, 255, 255, 0);
   }
+
+  50% {
+    backdrop-filter: blur(4px);
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+
   100% {
     backdrop-filter: blur(8px);
     background-color: rgba(255, 255, 255, 0.5);
@@ -108,11 +114,11 @@
 }
 
 .animate-quiz-popup-fade-out {
-  animation: quiz-popup 1.5s ease-out forwards, quiz-fade-out 2s forwards;
+  animation: quiz-popup 1.5s ease-out forwards, quiz-fade-out 3s;
 }
 
 .animate-quiz-bounce {
-  animation: quiz-popup 1.5s ease-out forwards, quiz-bounce 1.5s ease-in-out infinite;
+  animation: quiz-popup 1.7s ease-out forwards, quiz-bounce 1.5s;
 }
 
 /* 새로운 회전 클래스 추가 */
@@ -122,8 +128,8 @@
 
 /* 회전과 바운스를 함께 적용하는 클래스 */
 .animate-quiz-bounce-rotate {
-  animation: 
-    quiz-popup 1.5s ease-out forwards, 
+  animation:
+    quiz-popup 1.5s ease-out forwards,
     quiz-bounce 1.5s ease-in-out infinite,
     quiz-rotate 2.5s ease-in-out infinite;
 }
