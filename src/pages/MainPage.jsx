@@ -1,38 +1,49 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdComputer, MdCalculate, MdScience, MdArrowForward, MdQuiz, MdCheck, MdStar, MdTrendingUp } from 'react-icons/md';
+import { 
+  MdComputer, 
+  MdCalculate, 
+  MdScience, 
+  MdArrowForward, 
+  MdQuiz, 
+  MdCheck, 
+  MdStar, 
+  MdTrendingUp, 
+  MdMemory, 
+  MdBuild,
+  MdBook
+} from 'react-icons/md';
 import { FaBook, FaGraduationCap, FaTrophy } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
+import { majorAPI } from '../utils/api';
+// 이미지 가져오기
+import chipImage from '../assets/chip.png';
+import mechanicImage from '../assets/mechanic.png';
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const [popularQuizzes, setPopularQuizzes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const popularQuizzes = [
-    {
-      id: 1,
-      title: '컴퓨터 과학',
-      count: 12,
-      icon: <MdComputer className="w-8 h-8 text-white" />,
-      bgColor: 'bg-orange-500',
-      category: 'computer-science'
-    },
-    {
-      id: 2,
-      title: '수학',
-      count: 8,
-      icon: <MdCalculate className="w-8 h-8 text-white" />,
-      bgColor: 'bg-green-500',
-      category: 'mathematics'
-    },
-    {
-      id: 3,
-      title: '물리학',
-      count: 5,
-      icon: <MdScience className="w-8 h-8 text-white" />,
-      bgColor: 'bg-[#0C21C1]',
-      category: 'physics'
-    }
-  ];
+  // 서버에서 전공별 퀴즈 개수 데이터를 가져오는 함수
+  useEffect(() => {
+    const fetchMajorsWithQuizCounts = async () => {
+      try {
+        setLoading(true);
+        const data = await majorAPI.getMajorsWithQuizCount();
+        console.log('서버에서 받은 전공 데이터:', data);
+        setPopularQuizzes(data);
+        setLoading(false);
+      } catch (err) {
+        console.error('전공별 퀴즈 개수를 가져오는데 실패했습니다:', err);
+        setError('데이터를 불러오는데 실패했습니다.');
+        setLoading(false);
+      }
+    };
+
+    fetchMajorsWithQuizCounts();
+  }, []);
 
   const handleStartQuiz = () => {
     navigate('/quiz');
@@ -40,6 +51,47 @@ const MainPage = () => {
 
   const handleQuizCategory = (category) => {
     navigate(`/quiz?category=${category}`);
+  };
+
+  // 아이콘 또는 이미지 컴포넌트 렌더링
+  const renderIconOrImage = (quiz) => {
+    // 이미지를 사용하는 경우
+    if (quiz.useImage) {
+      let imageSrc;
+      switch (quiz.imagePath) {
+        case 'chip.png':
+          imageSrc = chipImage;
+          break;
+        case 'mechanic.png':
+          imageSrc = mechanicImage;
+          break;
+        default:
+          // 기본 이미지가 없으면 기본 아이콘 반환
+          return <MdQuiz className="w-8 h-8 text-white" />;
+      }
+      return <img src={imageSrc} alt={quiz.name} className="w-16 h-16" />;
+    } 
+    // 아이콘을 사용하는 경우
+    else {
+      console.log('렌더링할 아이콘:', quiz.icon);
+      switch(quiz.icon) {
+        case 'MdComputer':
+          return <MdComputer className="w-8 h-8 text-white" />;
+        case 'MdCalculate':
+          return <MdCalculate className="w-8 h-8 text-white" />;
+        case 'MdScience':
+          return <MdScience className="w-8 h-8 text-white" />;
+        case 'MdQuiz':
+          return <MdQuiz className="w-8 h-8 text-white" />;
+        case 'MdBook':
+          return <MdBook className="w-8 h-8 text-white" />;
+        case 'MdTrendingUp':
+          return <MdTrendingUp className="w-8 h-8 text-white" />;
+        default:
+          console.log('알 수 없는 아이콘:', quiz.icon);
+          return <FaBook className="w-8 h-8 text-white" />;
+      }
+    }
   };
 
   return (
@@ -157,32 +209,44 @@ const MainPage = () => {
             인기 퀴즈
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularQuizzes.map((quiz) => (
-              <div
-                key={quiz.id}
-                onClick={() => handleQuizCategory(quiz.category)}
-                className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer group"
-              >
-                <div className="flex flex-col items-center text-center">
-                  {/* 아이콘 */}
-                  <div className={`${quiz.bgColor} w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200`}>
-                    {quiz.icon}
+          {loading ? (
+            <div className="flex justify-center items-center h-32">
+              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#0C21C1]"></div>
+            </div>
+          ) : error ? (
+            <div className="text-center text-red-500">{error}</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {popularQuizzes.length > 0 ? popularQuizzes.map((quiz, index) => (
+                <div
+                  key={quiz._id || `quiz-${index}`}
+                  onClick={() => handleQuizCategory(quiz.category)}
+                  className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer group"
+                >
+                  <div className="flex flex-col items-center text-center">
+                    {/* 아이콘 또는 이미지 */}
+                    <div className={`${quiz.bgColor} w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200`}>
+                      {renderIconOrImage(quiz)}
+                    </div>
+                    
+                    {/* 제목 */}
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      {quiz.name}
+                    </h3>
+                    
+                    {/* 퀴즈 개수 */}
+                    <p className="text-gray-600">
+                      {quiz.count}개의 퀴즈
+                    </p>
                   </div>
-                  
-                  {/* 제목 */}
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {quiz.title}
-                  </h3>
-                  
-                  {/* 퀴즈 개수 */}
-                  <p className="text-gray-600">
-                    {quiz.count}개의 퀴즈
-                  </p>
                 </div>
-              </div>
-            ))}
-          </div>
+              )) : (
+                <div className="col-span-3 text-center py-8">
+                  <p className="text-gray-500">등록된 전공이 없습니다.</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* 추가 기능 섹션 */}

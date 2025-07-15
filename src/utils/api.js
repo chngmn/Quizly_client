@@ -127,4 +127,39 @@ export const authAPI = {
   },
 };
 
+// 전공과 퀴즈 관련 API 함수들
+export const majorAPI = {
+  // 모든 전공 목록 가져오기
+  getAllMajors: async () => {
+    const response = await api.get('/api/majors');
+    return response.data;
+  },
+  
+  // 전공별 퀴즈 개수 가져오기
+  getMajorsWithQuizCount: async () => {
+    const response = await api.get('/api/majors/quiz-counts');
+    return response.data;
+  }
+};
+
+export const quizAPI = {
+  // 퀴즈 목록 가져오기 (필터링 가능)
+  getQuizzes: async (params) => {
+    const response = await api.get('/api/quizzes', { params });
+    return response.data;
+  },
+  
+  // 내 퀴즈 목록 가져오기
+  getMyQuizzes: async () => {
+    const response = await api.get('/api/quizzes/myquizzes');
+    return response.data;
+  },
+  
+  // 퀴즈 상세 정보 가져오기
+  getQuizById: async (id) => {
+    const response = await api.get(`/api/quizzes/${id}`);
+    return response.data;
+  }
+};
+
 export default api;
