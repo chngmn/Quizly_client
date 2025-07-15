@@ -34,7 +34,7 @@ const QuizTakingPage = () => {
 
   useEffect(() => {
     const fetchQuizzes = async () => {
-      if (!majorId || !subjectId || !quizType) {
+      if (!majorId) {
         setError('퀴즈를 시작하기 위한 정보가 부족합니다. 이전 페이지로 돌아가 다시 선택해주세요.');
         setLoading(false);
         return;
@@ -42,14 +42,7 @@ const QuizTakingPage = () => {
 
       try {
         setLoading(true);
-        const serverQuizType = quizTypeMap[quizType];
-        console.log('QuizType conversion:', { clientType: quizType, serverType: serverQuizType });
-        if (!serverQuizType) {
-          setError('유효하지 않은 퀴즈 유형입니다.');
-          setLoading(false);
-          return;
-        }
-
+        
         // initialQuizId가 있으면 해당 퀴즈만 가져옴
         if (initialQuizId) {
           console.log('Fetching specific quiz with ID:', initialQuizId);
@@ -65,17 +58,34 @@ const QuizTakingPage = () => {
           }
         }
 
-        // initialQuizId가 없거나 특정 퀴즈를 불러오는 데 실패한 경우 랜덤 퀴즈를 불러옴
-        console.log('Fetching random quizzes with params:', { majorId, subjectId, type: serverQuizType, limit: quizCount || 1 });
-        const response = await api.get('/api/quizzes', {
-          params: {
-            majorId,
-            subjectId,
-            type: serverQuizType,
-            limit: quizCount || 1,
-          },
-        });
-        console.log('Random quizzes response:', response.data);
+        // quizType이 제공된 경우에만 서버 타입으로 변환
+        let serverQuizType = null;
+        if (quizType) {
+          serverQuizType = quizTypeMap[quizType];
+          console.log('QuizType conversion:', { clientType: quizType, serverType: serverQuizType });
+        }
+
+        // API 요청 파라미터 구성
+        const params = {
+          majorId: majorId,
+          limit: quizCount || 1
+        };
+
+        // 선택적 파라미터 추가
+        if (subjectId) params.subjectId = subjectId;
+        if (serverQuizType) params.type = serverQuizType;
+
+        console.log('Fetching quizzes with params:', params);
+        
+        const response = await api.get('/api/quizzes', { params });
+        console.log('Quizzes response:', response.data);
+        
+        if (response.data.length === 0) {
+          setError('선택한 조건에 맞는 퀴즈가 없습니다. 다른 조건을 선택해주세요.');
+          setLoading(false);
+          return;
+        }
+        
         setQuizzes(response.data);
         setLoading(false);
       } catch (err) {
