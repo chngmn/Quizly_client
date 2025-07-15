@@ -161,5 +161,32 @@ export const quizAPI = {
     return response.data;
   }
 };
+// 등록한 퀴즈 목록
+export async function fetchRegisteredQuizzes() {
+  const res = await fetch('/api/quiz/my');
+  return res.json();
+}
+
+// 내가 푼 퀴즈 목록
+export async function fetchSolvedQuizzes() {
+  const res = await fetch('/api/record/my');
+  return res.json();
+}
+
+// 등록한 퀴즈 삭제
+export async function deleteQuiz(quizId) {
+  await fetch(`/api/quiz/${quizId}`, { method: 'DELETE' });
+}
+
+// 오답노트 목록
+export async function fetchWrongNote() {
+  const res = await fetch('/api/record/wrong');
+  return res.json();
+}
+
+// 오답노트에서 퀴즈 삭제
+export async function deleteWrongNote(quizId) {
+  await fetch(`/api/record/wrong/${quizId}`, { method: 'DELETE' });
+}
 
 export default api;
