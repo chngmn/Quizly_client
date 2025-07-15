@@ -49,8 +49,19 @@ const MainPage = () => {
     navigate('/quiz');
   };
 
-  const handleQuizCategory = (category) => {
-    navigate(`/quiz?category=${category}`);
+  // 인기 퀴즈 카테고리 클릭 핸들러 수정
+  const handleQuizCategory = (majorId, majorName) => {
+    // QuizTakingPage로 전공 ID와 함께 이동
+    // 이 때 필요한 파라미터들을 state로 전달
+    navigate('/quiz-taking', {
+      state: {
+        majorId: majorId,        // 전공 ID
+        subjectId: null,         // 과목은 지정하지 않고 전공 내 모든 과목에서 선택
+        quizType: null,          // 퀴즈 타입도 지정하지 않음
+        quizCount: 5,            // 5개의 퀴즈를 랜덤으로 가져옴
+        initialQuizId: null      // 특정 퀴즈가 아닌 랜덤 퀴즈
+      }
+    });
   };
 
   // 아이콘 또는 이미지 컴포넌트 렌더링
@@ -205,9 +216,12 @@ const MainPage = () => {
 
         {/* 인기 퀴즈 섹션 */}
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">
             인기 퀴즈
           </h2>
+          <p className="text-gray-600 text-center mb-12">
+            가장 인기 있는 퀴즈들을 풀어보세요!
+          </p>
           
           {loading ? (
             <div className="flex justify-center items-center h-32">
@@ -220,7 +234,7 @@ const MainPage = () => {
               {popularQuizzes.length > 0 ? popularQuizzes.map((quiz, index) => (
                 <div
                   key={quiz._id || `quiz-${index}`}
-                  onClick={() => handleQuizCategory(quiz.category)}
+                  onClick={() => handleQuizCategory(quiz._id, quiz.name)}
                   className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer group"
                 >
                   <div className="flex flex-col items-center text-center">
