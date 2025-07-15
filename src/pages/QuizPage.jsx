@@ -10,7 +10,7 @@ const QuizPage = () => {
     const [selectedMajorId, setSelectedMajorId] = useState('');
     const [selectedSubjectId, setSelectedSubjectId] = useState('');
     const [selectedQuizType, setSelectedQuizType] = useState('');
-    const [quizCount, setQuizCount] = useState(5); // 기본 퀴즈 개수
+    const [quizCount, setQuizCount] = useState(1); // 기본 퀴즈 개수
 
     // 전공 목록 불러오기
     useEffect(() => {

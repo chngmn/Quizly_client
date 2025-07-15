@@ -220,7 +220,7 @@ const MainPage = () => {
             인기 퀴즈
           </h2>
           <p className="text-gray-600 text-center mb-12">
-            가장 인기 있는 퀴즈들을 풀어보세요!
+            지금 가장 인기 있는 퀴즈들을 풀어보세요!
           </p>
           
           {loading ? (
