@@ -14,6 +14,15 @@
 
 ---
 
+## 팀 멤버
+
+| 이름 | 역할 | GitHub |
+|------|------|--------|
+| <img src="https://github.com/71ram.png" width="50"/> | 박기람 | [@chngmn](https://github.com/71ram) |
+| <img src="https://github.com/chmngmn.png" width="50"/> | 이창민 | [@chngmn](https://github.com/chngmn) |
+
+---
+
 ## ✨ 특징
 
 - **전공별/과목별 퀴즈**로 실력 점검
