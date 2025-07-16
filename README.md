@@ -1,13 +1,5 @@
 > <h4>2025S KAIST 몰입캠프</h4>
-> <h4>Week 1 : 2025. 07. 10. ~ 2025. 07. 16.</h4>
-
-<br/>
-
-<img src="https://github.com/user-attachments/assets/293532ef-f204-4907-8e13-069e56e5c18a" alt="Quizly Logo" width="240" height="90" />
-
-<b>전공별 퀴즈로 공부하고, 직접 문제를 만들어 공유하는 <strong style="color:#5C6BC0;">퀴즈 웹페이지</strong></b>
-
-<br/>
+> <h4>Week 2 : 2025. 07. 10. ~ 2025. 07. 16.</h4>
 
 ---
 
@@ -47,8 +39,12 @@
 
 ---
 
-## ✨ Point
+<br/>
+<img src="https://github.com/user-attachments/assets/293532ef-f204-4907-8e13-069e56e5c18a" alt="Quizly Logo" width="240" height="90" />
+<br/>
 
+## ✨ Point
+- 전공별 퀴즈로 공부하고, 직접 문제를 만들어 공유하는 퀴즈 웹페이지
 - **전공별/과목별 퀴즈**로 실력 점검
 - **OX, 객관식, 주관식, 족보 업로드** 등 다양한 문제 유형 지원
 - **문제 직접 출제 및 공유** 가능
