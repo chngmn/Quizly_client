@@ -1,18 +1,13 @@
-<p align="center">
-    <img width="128" height="48.8" alt="Quizly" src="https://github.com/user-attachments/assets/293532ef-f204-4907-8e13-069e56e5c18a" />
-</p>
-<p align="center" style="font-size:1.15rem; color:#444; margin-top:0.5em; margin-bottom:1.5em;">
-    전공별 퀴즈로 공부하고, 직접 문제를 만들어 공유하는 <b>퀴즈 웹페이지</b>
-</p>
+> <h4>2025S KAIST 몰입캠프</h4>
+> <h4>Week 1 : 2025. 07. 10. ~ 2025. 07. 16.</h4>
 
-<p align="center">
-    <a href="#Team-Members">Team Members</a> •
-    <a href="#Point">Point</a> •
-    <a href="#Get-Start">Get Start</a> •
-    <a href="#Main-Features">Main Features</a> •
-    <a href="#Screen-Shot">Screen Shot</a> •
-    <a href="#Tech-Stack">Tech Stack</a>
-</p>
+<br/>
+
+<img src="https://github.com/user-attachments/assets/293532ef-f204-4907-8e13-069e56e5c18a" alt="Quizly Logo" width="240" height="90" />
+
+<b>전공별 퀴즈로 공부하고, 직접 문제를 만들어 공유하는 <strong style="color:#5C6BC0;">퀴즈 웹페이지</strong></b>
+
+<br/>
 
 ---
 
