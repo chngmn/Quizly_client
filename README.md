@@ -1,7 +1,7 @@
 <p align="center">
     <img width="128" height="48.8" alt="Quizly" src="https://github.com/user-attachments/assets/293532ef-f204-4907-8e13-069e56e5c18a" />
 </p>
-<p align="center">전공별 퀴즈로 공부하고, 직접 문제를 만들어 공유하는 <b>퀴즈 웹 애플리케이션</b></p>
+<p align="center">전공별 퀴즈로 공부하고, 직접 문제를 만들어 공유하는 <b>퀴즈 웹페이지</b></p>
 
 <p align="center">
   <a href="#특징">특징</a> •
