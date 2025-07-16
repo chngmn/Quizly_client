@@ -1,5 +1,5 @@
 > <h4>2025S KAIST 몰입캠프</h4>
-> <h4>Week 1 : 2025. 07. 03. ~ 2025. 07. 09.</h4>
+> <h4>Week 2 : 2025. 07. 10. ~ 2025. 07. 16.</h4>
 
 <br/>
 
@@ -8,20 +8,20 @@
     <tr>
       <td align="center" width="200">
         <a href="https://github.com/lyeonj">
-          <img width="120" height="120" alt="Image" src="https://github.com/user-attachments/assets/20bb526c-e67b-4704-9182-7f5ed84c194e" />
+          <img width="120" height="120" alt="Image" src="" />
           <br />
         </a>
       </td>
       <td align="center" width="200">
         <a href="https://github.com/chngmn">
-          <img width="120" height="120" alt="Image" src="https://github.com/user-attachments/assets/20771cb6-a9f0-4648-87ac-f9e3268767e1" />
+          <img width="120" height="120" alt="Image" src="" />
           <br />
         </a>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <b>이연재</b>
+        <b>박기람</b>
       </td>
       <td align="center">
         <b>이창민</b>
@@ -29,7 +29,7 @@
     </tr>
   <tr>
     <td align="center">
-      <p>숙명여대 IT공학전공</p>
+      <p>한양대 정보시스템학과</p>
     </td>
     <td align="center">
       <p>카이스트 전산학부</p>
@@ -37,13 +37,14 @@
   </tr>
 </table>
 
+
 <br />
 
 ## 👀 Project Overview
-<img align="left" width="150" height="150" alt="Image" src="https://github.com/user-attachments/assets/c19c07cc-ac2d-4c9e-821c-a0e9ba9c9af5" />
+<img align="left" width="116" height="144" alt="Image" src="https://github.com/user-attachments/assets/b88c63b8-e759-453a-a7f6-f828a1b7863f" />
 
-<h3>Silver Screen</h3>
-ㄴ 장면을 기억하고, 장소를 기록하는 나만의 영화 티켓
+<h3>Quizly</h3>
+ㄴ 학교 전공 관련 문제를 업로드하고 풀 수 있는 웹페이지
 
 <br clear="left" />
 <br/>
@@ -128,5 +129,5 @@
 <br />
 
 ## 🔗 Demo & Design Resources
-- 📂 <a href="https://drive.google.com/file/d/1WOp8KBrBVylhcjiP0NL-dffYF82_DW-n/view?usp=sharing" target="_blank">APK file</a>
-- 🎨 <a href="https://www.figma.com/design/ofn0OsQJtWnXR6W8Tb5NP3/2025S-Madcamp-Week-1---Silver-Screen?node-id=0-1&t=WaG0kPPEFvBoc1GM-1" target="_blank">Figma</a>
+- 📂 <a href="https://drive.google.com/file/d/1WOp8KBrBVylhcjiP0NL-dffYF82_DW-n/view?usp=sharing" target="_blank">Web Page</a>
+- 🎨 <a href="https://www.figma.com/design/TQJBRafMyxmoguG7snVMiG/Quizly?node-id=0-1&p=f&t=dLodPoqaU1qUkJLh-0" target="_blank">Figma</a>
