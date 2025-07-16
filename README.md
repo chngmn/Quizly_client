@@ -4,26 +4,53 @@
 <p align="center">전공별 퀴즈로 공부하고, 직접 문제를 만들어 공유하는 <b>퀴즈 웹페이지</b></p>
 
 <p align="center">
-  <a href="#특징">특징</a> •
-  <a href="#시작하기">시작하기</a> •
-  <a href="#주요-기능">주요 기능</a> •
-  <a href="#기술-스택">기술 스택</a> •
-  <a href="#기여">기여</a> •
-  <a href="#라이선스">라이선스</a>
+    <a href="#Team Members">Team Members</a> •
+    <a href="#Point">Point</a> •
+    <a href="#Get Start">Get Start</a> •
+    <a href="#Main Features">Main Features</a> •
+    <a href="#Screen Shot">Screen Shot</a> •
+    <a href="#Tech Stack">Tech Stack</a>
 </p>
 
 ---
 
-## 팀 멤버
-
-|  | 이름 | GitHub |
-|------|------|--------|
-| <img src="https://github.com/7lram.png" width="50"/> | 박기람 | [@7lram](https://github.com/7lram) |
-| <img src="https://github.com/chngmn.png" width="50"/> | 이창민 | [@chngmn](https://github.com/chngmn) |
+## 👥 Team Members
+<table>
+    <tr>
+      <td align="center" width="200">
+        <a href="https://github.com/lyeonj">
+          <img width="120" height="120" alt="Image" src="https://github.com/user-attachments/assets/b2ba0c01-b996-4703-8936-f3e40b85daf6" />
+          <br />
+        </a>
+      </td>
+      <td align="center" width="200">
+        <a href="https://github.com/chngmn">
+          <img width="120" height="120" alt="Image" src="https://github.com/user-attachments/assets/20771cb6-a9f0-4648-87ac-f9e3268767e1" />
+          <br />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <b>박기람</b>
+      </td>
+      <td align="center">
+        <b>이창민</b>
+      </td>
+    </tr>
+  <tr>
+    <td align="center">
+      <p>한양대 정보시스템학과</p>
+    </td>
+    <td align="center">
+      <p>카이스트 전산학부</p>
+    </td>
+  </tr>
+</table>
 
 ---
 
-## ✨ 특징
+## ✨ Point
 
 - **전공별/과목별 퀴즈**로 실력 점검
 - **OX, 객관식, 주관식, 족보 업로드** 등 다양한 문제 유형 지원
@@ -34,7 +61,7 @@
 
 ---
 
-## 🚀 시작하기
+## 🚀 Get Start
 
 
 ### 1. 클론 및 설치
@@ -64,7 +91,7 @@ node index.js
 
 ---
 
-## 🖥️ 주요 기능
+## 🖥️ Main Features
 
 | 기능                | 설명                                                         |
 |---------------------|-------------------------------------------------------------|
@@ -77,7 +104,7 @@ node index.js
 
 ---
 
-## 📸 스크린샷
+## 📸 Screen Shot
 
 <p align="center">
   <img src="client/src/assets/logo.png" alt="Quizly Main" width="120"/>
@@ -89,7 +116,7 @@ node index.js
 
 ---
 
-## 🛠️ 기술 스택
+## 🛠️ Tech Stack
 
 - **Frontend:** React, Vite, TailwindCSS, React Router, Axios
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, Multer
