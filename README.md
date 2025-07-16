@@ -16,10 +16,10 @@
 
 ## 팀 멤버
 
-| 이름 | 역할 | GitHub |
+|  | 이름 | GitHub |
 |------|------|--------|
-| <img src="https://github.com/71ram.png" width="50"/> | 박기람 | [@chngmn](https://github.com/71ram) |
-| <img src="https://github.com/chmngmn.png" width="50"/> | 이창민 | [@chngmn](https://github.com/chngmn) |
+| <img src="https://github.com/7lram.png" width="50"/> | 박기람 | [@7lram](https://github.com/7lram) |
+| <img src="https://github.com/chngmn.png" width="50"/> | 이창민 | [@chngmn](https://github.com/chngmn) |
 
 ---
 
