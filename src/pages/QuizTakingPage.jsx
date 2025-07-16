@@ -244,7 +244,7 @@ const QuizTakingPage = () => {
           <div className="w-full h-[500px]">
             {currentQuiz.files && currentQuiz.files.length > 0 ? (
               <iframe
-                src={`http://localhost:8000${currentQuiz.files[0]}`}
+                src={`${import.meta.env.VITE_API_BASE_URL}${currentQuiz.files[0]}`}
                 width="100%"
                 height="100%"
                 style={{ border: 'none' }}

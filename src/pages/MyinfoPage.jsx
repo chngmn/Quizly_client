@@ -66,7 +66,7 @@ const MyinfoPage = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8000/api/user/profile', {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
@@ -95,7 +95,7 @@ const MyinfoPage = () => {
             const gender = localStorage.getItem('user_gender');
             const school = localStorage.getItem('user_school');
             const email = localStorage.getItem('user_email');
-            
+
             if (nickname) {
                 const userData = {
                     nickname: nickname,
@@ -120,7 +120,7 @@ const MyinfoPage = () => {
 
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/api/user/profile', {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ const MyinfoPage = () => {
                 if (userInfo.email) {
                     localStorage.setItem('user_email', userInfo.email);
                 }
-                
+
                 setOriginalUserInfo(userInfo);
                 setIsEditing(false);
                 alert('정보가 저장되었습니다.');
@@ -193,8 +193,8 @@ const MyinfoPage = () => {
                 alert('로그인이 필요합니다.');
                 return;
             }
-            
-            const response = await fetch('http://localhost:8000/api/user/password', {
+
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user/password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ const MyinfoPage = () => {
             });
 
             const data = await response.json();
-            
+
             if (response.ok) {
                 alert('비밀번호가 성공적으로 변경되었습니다.');
                 setCurrentPassword('');
@@ -268,7 +268,7 @@ const MyinfoPage = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:8000/api/user', {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -303,15 +303,15 @@ const MyinfoPage = () => {
     return (
         <div className="min-h-screen bg-white relative">
             <Navbar />
-            
+
             <div className="flex flex-col items-center pt-12 px-4 pb-20">
                 {/* 프로필 이미지 */}
                 <div className="relative w-32 h-32 mb-6">
                     <div className="w-full h-full rounded-full overflow-hidden">
                         {userInfo.profileImage ? (
-                            <img 
-                                src={userInfo.profileImage} 
-                                alt="프로필 이미지" 
+                            <img
+                                src={userInfo.profileImage}
+                                alt="프로필 이미지"
                                 className="w-full h-full object-cover"
                             />
                         ) : (
