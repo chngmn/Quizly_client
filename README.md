@@ -105,14 +105,32 @@ node index.js
 ---
 
 ## 📸 Screen Shot
+<table>
+    <tr>
+        <td>
+            <img width="5760" height="5760" alt="image" src="https://github.com/user-attachments/assets/91722a70-1cf3-4ec4-817c-493596748d7a" />
+        </td>
+        <td>
+            <img width="5760" height="4998" alt="image" src="https://github.com/user-attachments/assets/ba006566-959e-4d9c-a918-124fe79d7d54" />
+        </td>
+        <td>
+            <img width="5760" height="2924" alt="image" src="https://github.com/user-attachments/assets/26d8bddc-39b8-40b9-9d52-ecbf3379e694" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img width="5760" height="2924" alt="image" src="https://github.com/user-attachments/assets/6e8f6fab-1988-4c63-b96e-d05c46e9786f" />
+        </td>
+        <td>
+            <img width="5760" height="3932" alt="image" src="https://github.com/user-attachments/assets/8897fba4-7e76-4f1c-865b-f89de708e9fe" />
+        </td>
+        <td>
+            <img width="5760" height="2924" alt="image" src="https://github.com/user-attachments/assets/5c2947ef-1f79-449c-b7b3-a3861a6ca72b" />
+        </td>
+    </tr>
+</table>
 
-<p align="center">
-  <img src="client/src/assets/logo.png" alt="Quizly Main" width="120"/>
-  <br/>
-  <b>메인 페이지</b>
-</p>
-
-> (실제 서비스 화면 캡처 이미지를 여기에 추가하면 더욱 좋습니다.)
+<br/>
 
 ---
 
